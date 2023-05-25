@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lsy.toy.dao.IDao">
+	
+	<select id="list" resultType="com.lsy.toy.dto.toyDto">
+		select img_key, cust_no, cust_nm, doc_cd, enr_user_id, enr_org_cd from X354056.TOY_BIZ_INFO 
+		group by img_key, cust_no, cust_nm, doc_cd, enr_user_id, enr_org_cd order by img_key
+	</select>
+	<!-- 
+	<select id="eidlist" resultType="com.lsy.toy.dto.toyDto">
+		select img_key, cust_no, cust_nm, doc_cd, enr_user_id, enr_org_cd from X354056.TOY_BIZ_INFO 
+		group by img_key, cust_no, cust_nm, doc_cd, enr_user_id, enr_org_cd order by img_key
+	</select>
+	 -->
+	<select id="content_view" resultType="com.lsy.toy.dto.toyDto">
+		select * from X354056.TOY_BIZ_INFO where img_key = #{param1}
+	</select>
+	
+	<insert id="write">
+		INSERT INTO X354056.TOY_BIZ_INFO (elementid,img_key,cust_no,cust_nm,doc_cd,file_nm,enr_dtm,enr_user_id,enr_org_cd,del_yn) 
+		VALUES (#{param1},#{param2},#{param3},#{param4},#{param5},#{param6},#{param7},#{param8},#{param9},#{param10})
+	</insert>
+	
+	<update id="modify">
+		UPDATE X354056.TOY_BIZ_INFO set img_key = #{param1}, cust_no = #{param2}, cust_nm = #{param3}, doc_cd = #{param4}, 
+		file_nm = #{param5}, enr_dtm = #{param6}, enr_user_id = #{param7}, enr_org_cd = #{param8} where elementid = #{param9}
+	</update>
+	
+	<update id="delete">
+		update X354056.TOY_BIZ_INFO set del_yn = 'Y' where elementid = #{param1}
+	</update>
+	
+	
+</mapper>
