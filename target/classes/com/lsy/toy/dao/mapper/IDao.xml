@@ -6,7 +6,19 @@
 <mapper namespace="com.lsy.toy.dao.IDao">
 	
 	<select id="list" resultType="com.lsy.toy.dto.toyDto">
-		select img_key, cust_no, cust_nm, doc_cd, enr_user_id, enr_org_cd from X354056.TOY_BIZ_INFO 
+		select img_key, cust_no, cust_nm, doc_cd, enr_user_id, enr_org_cd from 
+		(
+		select row_number() over (order by img_key) NUM, A.* from X354056.TOY_BIZ_INFO A 
+		<if test="keyword != null and keyword != '' ">
+			<if test="searchType=='img_key'">
+				WHERE img_key like #{keyword} || '%'
+			</if>
+			<if test="searchType=='doc_cd'">
+				WHERE doc_cd like #{keyword} || '%'
+			</if>
+		</if>
+		) 
+		where NUM BETWEEN #{startList}-1+#{startList}/10 and #{startList}+#{listSize}
 		group by img_key, cust_no, cust_nm, doc_cd, enr_user_id, enr_org_cd order by img_key
 	</select>
 	<!-- 
@@ -33,5 +45,21 @@
 		update X354056.TOY_BIZ_INFO set del_yn = 'Y' where elementid = #{param1}
 	</update>
 	
+	<select id="getBoardListCnt" resultType="int">
+		SELECT
+			count(*) as listCnt
+		FROM
+			X354056.TOY_BIZ_INFO
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+		<if test="keyword != null and keyword != '' ">
+			<if test="searchType=='img_key'">
+				AND img_key like #{keyword} || '%'
+			</if>
+			<if test="searchType=='doc_cd'">
+				AND doc_cd like #{keyword} || '%'
+			</if>
+		</if>
+		</trim>
+	</select>
 	
 </mapper>

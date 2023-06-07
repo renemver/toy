@@ -13,11 +13,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.lsy.toy.command.toyCommand;
 import com.lsy.toy.dao.IDao;
 import com.lsy.toy.dao.toyDao;
 import com.lsy.toy.util.EcmUtil;
+import com.lsy.toy.util.Pagination;
+import com.lsy.toy.util.Search;
 
 @Controller
 public class toyController {
@@ -43,14 +46,42 @@ public class toyController {
 	}
 	
 	@RequestMapping("/list")
-	public String list(Model model) {
+	public String list(Model model
+			, @RequestParam(required = false, defaultValue = "1") int page
+			, @RequestParam(required = false, defaultValue = "1") int range
+			, @RequestParam(required = false, defaultValue = "img_key") String searchType
+			, @RequestParam(required = false) String keyword
+			) {
 		System.out.println("list()");
+
+		Search search = new Search();
+		search.setSearchType(searchType);
+		search.setKeyword(keyword);
 		
 		IDao dao = sqlSession.getMapper(IDao.class);
-		model.addAttribute("list", dao.list());
+
+		//전체 게시글 개수
+		int listCnt = dao.getBoardListCnt(search);
 		
+		//Pagination 객체생성
+//		Pagination pagination = new Pagination();
+//		pagination.pageInfo(page, range, listCnt);
+		search.pageInfo(page, range, listCnt);
+		
+		model.addAttribute("pagination", search);
+		model.addAttribute("list", dao.list(search));
+				
 		return "list";
 	}
+	/**
+     * Tiles 사용
+     */        
+    @RequestMapping(value="/testTiles.do")
+    public String testPage() {
+        System.out.println("tiles Test!");
+        return "tilesTest.page";
+    }
+    
 	/*
 	@RequestMapping("/eidlist")
 	public String eidlist(Model model) {
@@ -76,7 +107,7 @@ public class toyController {
 
 		String elementid = null;
 		try {
-			elementid = EcmUtil.create("C:\\Users\\user\\Downloads\\test.txt", "BASIC");
+			elementid = EcmUtil.create("C:\\Users\\user\\Downloads\\test.txt", "TOY_CC");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -91,12 +122,14 @@ public class toyController {
 	
 	
 	@RequestMapping("/content_view")
-	public String content_view(HttpServletRequest request, Model model) {
+	public String content_view(@RequestParam(value="checkbox", required=false)String value, HttpServletRequest request, Model model) {
 		System.out.println("content_view()");
 	
 		IDao dao = sqlSession.getMapper(IDao.class);
 		model.addAttribute("content_view", dao.content_view(request.getParameter("img_key")));
 
+		String[] elementid = request.getParameterValues("ck");
+	
 		return "content_view";
 	}
 

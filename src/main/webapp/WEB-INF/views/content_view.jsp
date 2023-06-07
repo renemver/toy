@@ -2,13 +2,18 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@ include file="/WEB-INF/views/layout/header.jsp"%>
 <html>
 <head>
+<!-- Bootstrap CSS -->
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>content view</title>
 </head>
 <body>
-	<table width="500" cellpadding="0" cellspacing="0" border="1">
+<article>
+		<div class="container">
+		<div class="table-responsive">
+	<table class="table table-striped table-sm" width="500" cellpadding="0" cellspacing="0" border="1">
 		<tr>
 			<td></td>>
 			<td>eid</td>
@@ -24,7 +29,7 @@
 		</tr>
 		<c:forEach items="${content_view}" var="dto">
 			<tr>
-				<td><input type="checkbox"></td>
+				<td><input type="checkbox" name="ck" value="${dto.elementid}"></td>
 				<td>${dto.elementid}</td>
 			    <td>${dto.img_key}</td>
 			    <td>${dto.cust_no}</td>
@@ -39,10 +44,15 @@
 		</c:forEach>
 		
 		<tr>
-			<td colspan="5"><input type="submit" value="수정"> &nbsp;&nbsp; <a href="list">목록으로</a> &nbsp;&nbsp;
+			<td colspan="5"><a href="write_view">첨부파일등록 </a> &nbsp;&nbsp;
+			<td colspan="5"><input type="submit" value="수정"> &nbsp;&nbsp;  
+			<a href="list">목록으로</a> &nbsp;&nbsp;
 			<a href="delete?elementid=${dto.elementid}">삭제</a>
 			</td>
 		</tr>
 		</table>
+		</div>
+		</div>
+	</article>
 </body>
 </html>
