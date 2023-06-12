@@ -18,8 +18,6 @@
 			    <td><input type="text" name="cust_nm"></td>
 			<td>문서코드</td>
 			    <td><input type="text" name="doc_cd"></td>
-			<td>파일명</td>
-			    <td><input type="text" name="file_nm"></td>
 			<td>담당자</td>
 			    <td><input type="text" name="enr_user_id"></td>
 			<td>담당업무코드</td>
@@ -28,7 +26,8 @@
 		</tr>
 		
 		<tr>
-			<td colspan="5"><input type="submit" value="신규 등록"> &nbsp;&nbsp; <a href="list">목록으로</td>
+			<td colspan="5"><input type="submit" value="신규 등록"> &nbsp;&nbsp; 
+			<a href="list">목록으로</td>
 		</tr>
 		</form>
 		</table>

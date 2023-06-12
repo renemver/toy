@@ -1,5 +1,9 @@
 package com.lsy.toy.util;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+
 import com.windfire.apis.asysConnectData;
 import com.windfire.apis.asys.asysUsrElement;
 
@@ -22,9 +26,10 @@ public class EcmUtil {
 		}
 	}
 
-	public static String create(String filepath, String classid ) throws Exception{
+	public static String create(String filename, String classid ) throws Exception{
 		asysUsrElement uePage1 = new asysUsrElement(con);
-		uePage1.m_localFile = filepath;
+	//	uePage1.m_fileIn = is;
+		uePage1.m_localFile = filename;
 		uePage1.m_cClassId = classid; // .m_archive = "CAS_ARC";
 		uePage1.m_userSClass = "SUPER";
 		uePage1.m_eClassId = "IMAGE";

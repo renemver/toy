@@ -1,6 +1,11 @@
 package com.lsy.toy.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Timestamp;
+import java.util.List;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -14,6 +19,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.lsy.toy.command.toyCommand;
 import com.lsy.toy.dao.IDao;
@@ -73,6 +80,81 @@ public class toyController {
 				
 		return "list";
 	}
+	
+	@RequestMapping("/listCO")
+	public String listCO(Model model
+			, @RequestParam(required = false, defaultValue = "1") int page
+			, @RequestParam(required = false, defaultValue = "1") int range
+			, @RequestParam(required = false, defaultValue = "img_key") String searchType
+			, @RequestParam(required = false) String keyword
+			) {
+		System.out.println("listCO()");
+
+		Search search = new Search();
+		search.setSearchType(searchType);
+		search.setKeyword(keyword);
+		
+		IDao dao = sqlSession.getMapper(IDao.class);
+
+		//전체 게시글 개수
+		int listCnt = dao.getBoardListCnt(search);
+		search.pageInfo(page, range, listCnt);
+		
+		model.addAttribute("pagination", search);
+		model.addAttribute("listCO", dao.listCO(search));
+				
+		return "listCO";
+	}
+	
+	@RequestMapping("/listLN")
+	public String listLN(Model model
+			, @RequestParam(required = false, defaultValue = "1") int page
+			, @RequestParam(required = false, defaultValue = "1") int range
+			, @RequestParam(required = false, defaultValue = "img_key") String searchType
+			, @RequestParam(required = false) String keyword
+			) {
+		System.out.println("listLN()");
+
+		Search search = new Search();
+		search.setSearchType(searchType);
+		search.setKeyword(keyword);
+		
+		IDao dao = sqlSession.getMapper(IDao.class);
+
+		//전체 게시글 개수
+		int listCnt = dao.getBoardListCnt(search);
+		search.pageInfo(page, range, listCnt);
+		
+		model.addAttribute("pagination", search);
+		model.addAttribute("listLN", dao.listLN(search));
+				
+		return "listLN";
+	}
+	
+	@RequestMapping("/listDP")
+	public String listDP(Model model
+			, @RequestParam(required = false, defaultValue = "1") int page
+			, @RequestParam(required = false, defaultValue = "1") int range
+			, @RequestParam(required = false, defaultValue = "img_key") String searchType
+			, @RequestParam(required = false) String keyword
+			) {
+		System.out.println("listDP()");
+
+		Search search = new Search();
+		search.setSearchType(searchType);
+		search.setKeyword(keyword);
+		
+		IDao dao = sqlSession.getMapper(IDao.class);
+
+		//전체 게시글 개수
+		int listCnt = dao.getBoardListCnt(search);
+		search.pageInfo(page, range, listCnt);
+		
+		model.addAttribute("pagination", search);
+		model.addAttribute("listDP", dao.listDP(search));
+				
+		return "listDP";
+	}
 	/**
      * Tiles 사용
      */        
@@ -100,26 +182,81 @@ public class toyController {
 		return "write_view";
 	}
 	
-
 	@RequestMapping("/write")
 	public String write(HttpServletRequest request, Model model) {
 		System.out.println("write()");
-
-		String elementid = null;
-		try {
-			elementid = EcmUtil.create("C:\\Users\\user\\Downloads\\test.txt", "TOY_CC");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 		
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 		IDao dao = sqlSession.getMapper(IDao.class);
-		dao.write(elementid, request.getParameter("img_key"), request.getParameter("cust_no"), request.getParameter("cust_nm"), request.getParameter("doc_cd"),
-				request.getParameter("file_nm"), timestamp, request.getParameter("enr_user_id"), request.getParameter("enr_org_cd") , "N" );
-		 
+		String doccd = request.getParameter("doc_cd").substring(0,2);
+		
+		if(doccd.equals("01")) {
+			dao.write_CO(request.getParameter("img_key"), request.getParameter("cust_no"), request.getParameter("cust_nm"), 
+			request.getParameter("doc_cd"), timestamp, request.getParameter("enr_user_id"), request.getParameter("enr_org_cd") , "N" );
+		}
+		else if(doccd.equals("02")) {
+			dao.write_DP(request.getParameter("img_key"), request.getParameter("cust_no"), request.getParameter("cust_nm"), 
+			request.getParameter("doc_cd"), timestamp, request.getParameter("enr_user_id"), request.getParameter("enr_org_cd") , "N" );
+		}
+		else if(doccd.equals("03")) {
+			dao.write_LN(request.getParameter("img_key"), request.getParameter("cust_no"), request.getParameter("cust_nm"), 
+			request.getParameter("doc_cd"), timestamp, request.getParameter("enr_user_id"), request.getParameter("enr_org_cd") , "N" );
+		}
 		return "redirect:list";
 	}
-	
+
+	@RequestMapping("/write_content")
+	public String write_content(Model model, MultipartHttpServletRequest file) {
+		System.out.println("write_content()");
+		
+		List<MultipartFile> list = file.getFiles("file");
+		String img_key = null;
+		for(int i = 0; i<list.size(); i++) {
+			String filepath = "D:/temp";
+			String fileRealName = list.get(i).getOriginalFilename();
+			filepath = filepath + "/" + UUID.randomUUID().toString() + fileRealName;
+			File f = new File(filepath);
+			try {
+				list.get(i).transferTo(f);
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+			
+			String elementid = null;
+			String CC = "TOY_CC";
+			img_key = file.getParameter("img_key");
+			String doc_cd = file.getParameter("doc_cd");
+			if(doc_cd.substring(0,2).equals("01"))
+				CC = "CO_CC";
+			else if(doc_cd.substring(0,2).equals("02"))
+				CC = "DP_CC";
+			else if(doc_cd.substring(0,2).equals("03"))
+				CC = "LN_CC";
+			
+			try {
+//				elementid = EcmUtil.create("C:\\Users\\user\\Downloads\\test.txt", CC);
+				elementid = EcmUtil.create(filepath, CC);
+				if(elementid!=null) {
+					f.delete();
+				}
+					
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+			IDao dao = sqlSession.getMapper(IDao.class);
+			
+			String cust_no = file.getParameter("cust_no");
+			String cust_nm = file.getParameter("cust_nm");
+			String enr_user_id = file.getParameter("enr_user_id");
+			String enr_org_cd = file.getParameter("enr_org_cd");
+			
+			dao.write(elementid, img_key, cust_no, cust_nm, doc_cd, fileRealName, timestamp, enr_user_id, enr_org_cd, "N" );
+		}
+		 
+		return "redirect:content_view?img_key="+img_key;
+	}
 	
 	@RequestMapping("/content_view")
 	public String content_view(@RequestParam(value="checkbox", required=false)String value, HttpServletRequest request, Model model) {
@@ -144,7 +281,6 @@ public class toyController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 		
 		IDao dao = sqlSession.getMapper(IDao.class);
 		dao.modify(request.getParameter("img_key"), request.getParameter("cust_no"), request.getParameter("cust_nm"), request.getParameter("doc_cd"), 

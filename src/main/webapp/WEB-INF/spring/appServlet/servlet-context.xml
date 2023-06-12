@@ -72,4 +72,9 @@
     </beans:bean>   
 	 -->
 	 
+	 <!-- 첨부파일을 처리하는 빈 설정 -->
+   <beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+ 	  <beans:property name="maxUploadSize" value="100000000" />
+ 	  <beans:property name="defaultEncoding" value="utf-8" />
+   </beans:bean>
 </beans:beans>

@@ -14,6 +14,7 @@
 		<div class="container">
 		<div class="table-responsive">
 	<table class="table table-striped table-sm" width="500" cellpadding="0" cellspacing="0" border="1">
+		<form action="write_content" method="post" enctype="multipart/form-data">
 		<tr>
 			<td></td>>
 			<td>eid</td>
@@ -30,26 +31,29 @@
 		<c:forEach items="${content_view}" var="dto">
 			<tr>
 				<td><input type="checkbox" name="ck" value="${dto.elementid}"></td>
-				<td>${dto.elementid}</td>
-			    <td>${dto.img_key}</td>
-			    <td>${dto.cust_no}</td>
-			    <td>${dto.cust_nm}</td>
-			    <td>${dto.doc_cd}</td>
-			    <td>${dto.file_nm}</td>
-			    <td>${dto.enr_dtm}</td>
-			    <td>${dto.enr_user_id}</td>
-			    <td>${dto.enr_org_cd}</td>
-			    <td>${dto.del_yn}</td>		
+				<td><input type="hidden" name="elementid" value="${dto.elementid}">${dto.elementid}</td>
+			    <td><input type="hidden" name="img_key" value="${dto.img_key}">${dto.img_key}</td>
+			    <td><input type="hidden" name="cust_no" value="${dto.cust_no}">${dto.cust_no}</td>
+			    <td><input type="hidden" name="cust_nm" value="${dto.cust_nm}">${dto.cust_nm}</td>
+			    <td><input type="hidden" name="doc_cd" value="${dto.doc_cd}">${dto.doc_cd}</td>
+			    <td><input type="hidden" name="file_nm" value="${dto.file_nm}">${dto.file_nm}</td>
+			    <td><input type="hidden" name="enr_dtm" value="${dto.enr_dtm}">${dto.enr_dtm}</td>
+			    <td><input type="hidden" name="enr_user_id" value="${dto.enr_user_id}">${dto.enr_user_id}</td>
+			    <td><input type="hidden" name="enr_org_cd" value="${dto.enr_org_cd}">${dto.enr_org_cd}</td>
+			    <td><input type="hidden" name="del_yn" value="${dto.del_yn}">${dto.del_yn}</td>
+			    		
 			 </tr>
 		</c:forEach>
 		
 		<tr>
-			<td colspan="5"><a href="write_view">첨부파일등록 </a> &nbsp;&nbsp;
+			파일 선택 : <input type="file" multiple="multiple" name="file">				
+			<td colspan="5"><input type="submit" value="이미지등록">
 			<td colspan="5"><input type="submit" value="수정"> &nbsp;&nbsp;  
 			<a href="list">목록으로</a> &nbsp;&nbsp;
 			<a href="delete?elementid=${dto.elementid}">삭제</a>
 			</td>
 		</tr>
+		</form>
 		</table>
 		</div>
 		</div>

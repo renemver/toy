@@ -43,10 +43,26 @@ public class toyDao implements IDao{
 	}
 	
 	public ArrayList<toyDto> list(Search search) {return null;}
+	public ArrayList<toyDto> listCO(Search search) {return null;}
+	public ArrayList<toyDto> listLN(Search search) {return null;}
+	public ArrayList<toyDto> listDP(Search search) {return null;}
 
-	public void write(final String elementid, final String img_key, final String cust_no, final String cust_nm, final String doc_cd, 
-			final String file_nm, final Timestamp enr_dtm, final String enr_user_id, final String enr_org_cd, String del_yn) {}
+	@Override
+	public void write(String elementid, String img_key, String cust_no, String cust_nm, String doc_cd, 
+			String file_nm, Timestamp enr_dtm, String enr_user_id, String enr_org_cd, String del_yn) {}
+	
+	@Override
+	public void write_LN(String img_key, String cust_no, String cust_nm, String doc_cd, Timestamp enr_dtm,
+			String enr_user_id, String enr_org_cd, String del_yn) {}
 
+	@Override
+	public void write_DP(String img_key, String cust_no, String cust_nm, String doc_cd, Timestamp enr_dtm,
+			String enr_user_id, String enr_org_cd, String del_yn) {}
+
+	@Override
+	public void write_CO(String img_key, String cust_no, String cust_nm, String doc_cd, Timestamp enr_dtm,
+			String enr_user_id, String enr_org_cd, String del_yn) {}
+	
 	public ArrayList<toyDto> content_view(String img_key) {return null;}
 
 	public void modify(final String img_key, final String cust_no, final String cust_nm, final String doc_cd, final String file_nm,	

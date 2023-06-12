@@ -11,10 +11,59 @@
 		select row_number() over (order by img_key) NUM, A.* from X354056.TOY_BIZ_INFO A 
 		<if test="keyword != null and keyword != '' ">
 			<if test="searchType=='img_key'">
-				WHERE img_key like #{keyword} || '%'
+				WHERE img_key like #{keyword} || '%' AND ENR_DTM >= TO_CHAR(SYSDATE-90, 'YYYYMMDD')
 			</if>
 			<if test="searchType=='doc_cd'">
-				WHERE doc_cd like #{keyword} || '%'
+				WHERE  doc_cd like #{keyword} || '%' AND ENR_DTM >= TO_CHAR(SYSDATE-90, 'YYYYMMDD')
+			</if>
+		</if>
+		) 
+		where NUM BETWEEN #{startList}-1+#{startList}/10 and #{startList}+#{listSize}
+		group by img_key, cust_no, cust_nm, doc_cd, enr_user_id, enr_org_cd order by img_key
+	</select>
+	
+	<select id="listCO" resultType="com.lsy.toy.dto.toyDto">
+		select img_key, cust_no, cust_nm, doc_cd, enr_user_id, enr_org_cd from 
+		(
+		select row_number() over (order by img_key) NUM, A.* from X354056.TOY_COMMON_TB A 
+		<if test="keyword != null and keyword != '' ">
+			<if test="searchType=='img_key'">
+				WHERE img_key like #{keyword} || '%' AND ENR_DTM >= TO_CHAR(SYSDATE-90, 'YYYYMMDD')
+			</if>
+			<if test="searchType=='doc_cd'">
+				WHERE  doc_cd like #{keyword} || '%' AND ENR_DTM >= TO_CHAR(SYSDATE-90, 'YYYYMMDD')
+			</if>
+		</if>
+		) 
+		where NUM BETWEEN #{startList}-1+#{startList}/10 and #{startList}+#{listSize}
+		group by img_key, cust_no, cust_nm, doc_cd, enr_user_id, enr_org_cd order by img_key
+	</select>
+	<select id="listLN" resultType="com.lsy.toy.dto.toyDto">
+		select img_key, cust_no, cust_nm, doc_cd, enr_user_id, enr_org_cd from 
+		(
+		select row_number() over (order by img_key) NUM, A.* from X354056.TOY_LOAN_TB A 
+		<if test="keyword != null and keyword != '' ">
+			<if test="searchType=='img_key'">
+				WHERE img_key like #{keyword} || '%' AND ENR_DTM >= TO_CHAR(SYSDATE-90, 'YYYYMMDD')
+			</if>
+			<if test="searchType=='doc_cd'">
+				WHERE  doc_cd like #{keyword} || '%' AND ENR_DTM >= TO_CHAR(SYSDATE-90, 'YYYYMMDD')
+			</if>
+		</if>
+		) 
+		where NUM BETWEEN #{startList}-1+#{startList}/10 and #{startList}+#{listSize}
+		group by img_key, cust_no, cust_nm, doc_cd, enr_user_id, enr_org_cd order by img_key
+	</select>
+	<select id="listDP" resultType="com.lsy.toy.dto.toyDto">
+		select img_key, cust_no, cust_nm, doc_cd, enr_user_id, enr_org_cd from 
+		(
+		select row_number() over (order by img_key) NUM, A.* from X354056.TOY_DEPOSIT_TB A 
+		<if test="keyword != null and keyword != '' ">
+			<if test="searchType=='img_key'">
+				WHERE img_key like #{keyword} || '%' AND ENR_DTM >= TO_CHAR(SYSDATE-90, 'YYYYMMDD')
+			</if>
+			<if test="searchType=='doc_cd'">
+				WHERE  doc_cd like #{keyword} || '%' AND ENR_DTM >= TO_CHAR(SYSDATE-90, 'YYYYMMDD')
 			</if>
 		</if>
 		) 
@@ -34,6 +83,19 @@
 	<insert id="write">
 		INSERT INTO X354056.TOY_BIZ_INFO (elementid,img_key,cust_no,cust_nm,doc_cd,file_nm,enr_dtm,enr_user_id,enr_org_cd,del_yn) 
 		VALUES (#{param1},#{param2},#{param3},#{param4},#{param5},#{param6},#{param7},#{param8},#{param9},#{param10})
+	</insert>
+	
+	<insert id="write_LN">
+		INSERT INTO X354056.TOY_LOAN_TB (img_key,cust_no,cust_nm,doc_cd,enr_dtm,enr_user_id,enr_org_cd,del_yn) 
+		VALUES (#{param1},#{param2},#{param3},#{param4},#{param5},#{param6},#{param7},#{param8})
+	</insert>
+	<insert id="write_DP">
+		INSERT INTO X354056.TOY_DEPOSIT_TB (img_key,cust_no,cust_nm,doc_cd,enr_dtm,enr_user_id,enr_org_cd,del_yn) 
+		VALUES (#{param1},#{param2},#{param3},#{param4},#{param5},#{param6},#{param7},#{param8})
+	</insert>
+	<insert id="write_CO">
+		INSERT INTO X354056.TOY_COMMON_TB (img_key,cust_no,cust_nm,doc_cd,enr_dtm,enr_user_id,enr_org_cd,del_yn) 
+		VALUES (#{param1},#{param2},#{param3},#{param4},#{param5},#{param6},#{param7},#{param8})
 	</insert>
 	
 	<update id="modify">
