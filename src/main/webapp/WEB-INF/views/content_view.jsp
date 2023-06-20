@@ -14,9 +14,9 @@
 		<div class="container">
 		<div class="table-responsive">
 	<table class="table table-striped table-sm" width="500" cellpadding="0" cellspacing="0" border="1">
-		<form action="write_content" method="post" enctype="multipart/form-data">
+		<form method="post" action="write_content" enctype="multipart/form-data">
 		<tr>
-			<td></td>>
+			<td></td>
 			<td>eid</td>
 			<td>업무키</td>
 			<td>고객번호</td>
@@ -30,7 +30,7 @@
 		</tr>
 		<c:forEach items="${content_view}" var="dto">
 			<tr>
-				<td><input type="checkbox" name="ck" value="${dto.elementid}"></td>
+				<td><input type="checkbox" name="checkbox" value="${dto.elementid}" onclick='checkOnlyOne(this)'></td>
 				<td><input type="hidden" name="elementid" value="${dto.elementid}">${dto.elementid}</td>
 			    <td><input type="hidden" name="img_key" value="${dto.img_key}">${dto.img_key}</td>
 			    <td><input type="hidden" name="cust_no" value="${dto.cust_no}">${dto.cust_no}</td>
@@ -46,13 +46,44 @@
 		</c:forEach>
 		
 		<tr>
-			파일 선택 : <input type="file" multiple="multiple" name="file">				
-			<td colspan="5"><input type="submit" value="이미지등록">
-			<td colspan="5"><input type="submit" value="수정"> &nbsp;&nbsp;  
-			<a href="list">목록으로</a> &nbsp;&nbsp;
-			<a href="delete?elementid=${dto.elementid}">삭제</a>
-			</td>
+			<script>
+				function checkOnlyOne(element) { 
+				  const checkboxes = document.getElementsByName("checkbox");
+				  
+				  checkboxes.forEach((checkbox) =>{
+					  checkbox.checked = false;
+				  })
+				  
+				  element.checked = true;
+				}
+				function submit2(frm) { 
+			    	frm.action='modify_content'; 
+			    	frm.enctype="multipart/form-data";
+			    	frm.submit(); 
+			    	return true; 
+				} 
+				function submit3(frm) { 
+			    	frm.action='delete_content'; 
+			    	frm.submit(); 
+			    	return true; 
+				} 
+				function submit4(frm) { 
+			    	frm.action='download_content'; 
+			    	frm.submit(); 
+			    	return true; 
+				} 
+			</script>
 		</tr>
+		<table class="table table-striped table-sm" width="500" cellpadding="0" cellspacing="0" border="1">
+		<tr><td>등록 파일 선택 : <input type="file" multiple="multiple" name="file"
+			accept=".hwp, .doc, .docx, .ppt, .pptx, .xls, .xlsx, .txt, .csv, .jpg, .jpeg, .gif, .png, .bmp, .pdf">
+			<input type="submit" value="이미지등록" > </td> 
+			<td>변경 파일 선택 : <input type="file" name="replace_file" 
+			accept=".hwp, .doc, .docx, .ppt, .pptx, .xls, .xlsx, .txt, .csv, .jpg, .jpeg, .gif, .png, .bmp, .pdf">
+			<input type="submit" value="이미지변경" onclick='return submit2(this.form);'> </td> 
+			<td><input type="submit" value="삭제" onclick='return submit3(this.form);'></td>
+			<td><input type="submit" value="다운로드" onclick='return submit4(this.form);'></td>
+			</tr></table>
 		</form>
 		</table>
 		</div>

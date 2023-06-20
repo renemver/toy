@@ -12,7 +12,7 @@ public class EcmUtil {
 //	private static Logger log = Logger.getLogger("main");
 	public static asysConnectData con = new asysConnectData("192.168.100.35", 50011, "Toy", "SUPER", "SUPER");
 
-	public void download(String path, String elementId) throws Exception {
+	public static void download(String path, String elementId) throws Exception {
 		asysUsrElement uePage1 = new asysUsrElement(con);
 		uePage1.m_archive = "MAIN";
 		uePage1.m_elementId = "XTORM_MAIN::"+elementId+"::IMAGE";

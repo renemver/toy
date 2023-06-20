@@ -99,12 +99,18 @@
 	</insert>
 	
 	<update id="modify">
-		UPDATE X354056.TOY_BIZ_INFO set img_key = #{param1}, cust_no = #{param2}, cust_nm = #{param3}, doc_cd = #{param4}, 
-		file_nm = #{param5}, enr_dtm = #{param6}, enr_user_id = #{param7}, enr_org_cd = #{param8} where elementid = #{param9}
+		UPDATE X354056.TOY_BIZ_INFO set cust_no = #{param1}, cust_nm = #{param2}, doc_cd = #{param3}, 
+		file_nm = #{param4}, enr_dtm = #{param5}, enr_user_id = #{param6}, enr_org_cd = #{param7} where img_key = #{param8}
+	</update>
+	<update id="modify_content">
+		UPDATE X354056.TOY_BIZ_INFO set file_nm = #{param1}, enr_dtm = #{param2} where elementid = #{param3}
 	</update>
 	
 	<update id="delete">
-		update X354056.TOY_BIZ_INFO set del_yn = 'Y' where elementid = #{param1}
+		UPDATE X354056.TOY_BIZ_INFO SET del_yn = 'Y' where elementid = #{param1}
+	</update>
+	<update id="delete_content">
+		UPDATE X354056.TOY_BIZ_INFO SET del_yn = 'Y' where elementid = #{param1}
 	</update>
 	
 	<select id="getBoardListCnt" resultType="int">
@@ -123,5 +129,63 @@
 		</if>
 		</trim>
 	</select>
+	
+	<!--  -->
+	
+	<select id="getUserInfo" resultType="com.lsy.toy.user.dto.UserVO">
+		SELECT
+			ENR_USER_NO
+			, ENR_USER_ID
+			, ENR_USER_POSITION
+			, ENR_USER_GROUP
+			, CREATE_GRANT
+			, READ_GRANT
+			, UPDATE_GRANT
+			, DELETE_GRANT
+		FROM
+			X354056.TOY_USER_TB
+		WHERE
+			ENR_USER_ID = #{ENR_USER_ID}
+	</select>
+	
+	<select id="getUserList" resultType="com.lsy.toy.user.dto.UserVO">
+		SELECT
+			ENR_USER_NO
+			, ENR_USER_ID
+			, ENR_USER_POSITION
+			, ENR_USER_GROUP
+			, CREATE_GRANT
+			, READ_GRANT
+			, UPDATE_GRANT
+			, DELETE_GRANT
+		FROM
+			X354056.TOY_USER_TB
+	</select>
+	
+	<insert id="insertUser" parameterType="com.lsy.toy.user.dto.UserVO">
+		INSERT INTO X354056.TOY_USER_TB (ENR_USER_NO, ENR_USER_ID, ENR_USER_POSITION, 
+		ENR_USER_GROUP, CREATE_GRANT, READ_GRANT, UPDATE_GRANT, DELETE_GRANT, ENR_USER_PW)
+		VALUES (#{param1},#{param2},#{param3},#{param4},'N','Y','N','N',#{param5})
+	</insert>
+	
+	<update id="updateUser" parameterType="com.lsy.toy.user.dto.UserVO">
+		UPDATE X354056.TOY_USER_TB SET
+			ENR_USER_NO = #{param1}
+			, ENR_USER_ID = #{param2}
+			, ENR_USER_POSITION = #{param3}
+			, ENR_USER_GROUP = #{param4}
+			, CREATE_GRANT = #{param5}
+			, READ_GRANT = #{param6}
+			, UPDATE_GRANT = #{param7}
+			, DELETE_GRANT = #{param8}
+			, ENR_USER_PW = #{param9}
+		WHERE
+			ENR_USER_ID = #{param2}
+	</update>
+	
+	<delete id="deleteUser" parameterType="int">
+		DELETE FROM X354056.TOY_USER_TB
+		WHERE ENR_USER_ID = #{param1}
+	</delete>
 	
 </mapper>
