@@ -99,7 +99,7 @@ public class Pagination {
 		this.endPage = range * rangeSize;
 
 		//게시판 시작번호
-		this.startList = (page - 1) * listSize + 1;
+		this.startList = (page - 1) * listSize;
 		
 		//이전 버튼 상태
 		this.prev = range == 1 ? false : true;

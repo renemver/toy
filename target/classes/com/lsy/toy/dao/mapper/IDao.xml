@@ -35,7 +35,7 @@
 			</if>
 		</if>
 		) 
-		where NUM BETWEEN #{startList}-1+#{startList}/10 and #{startList}+#{listSize}
+		where NUM BETWEEN #{startList}+1 and #{startList}+1+#{listSize}-1
 		group by img_key, cust_no, cust_nm, doc_cd, enr_user_id, enr_org_cd order by img_key
 	</select>
 	<select id="listLN" resultType="com.lsy.toy.dto.toyDto">
@@ -51,7 +51,7 @@
 			</if>
 		</if>
 		) 
-		where NUM BETWEEN #{startList}-1+#{startList}/10 and #{startList}+#{listSize}
+		where NUM BETWEEN #{startList}+1 and #{startList}+1+#{listSize}-1
 		group by img_key, cust_no, cust_nm, doc_cd, enr_user_id, enr_org_cd order by img_key
 	</select>
 	<select id="listDP" resultType="com.lsy.toy.dto.toyDto">
@@ -67,7 +67,7 @@
 			</if>
 		</if>
 		) 
-		where NUM BETWEEN #{startList}-1+#{startList}/10 and #{startList}+#{listSize}
+		where NUM BETWEEN #{startList}+1 and #{startList}+1+#{listSize}-1
 		group by img_key, cust_no, cust_nm, doc_cd, enr_user_id, enr_org_cd order by img_key
 	</select>
 	<!-- 

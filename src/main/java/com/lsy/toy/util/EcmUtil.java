@@ -26,6 +26,20 @@ public class EcmUtil {
 		}
 	}
 
+	public static void download_view(String path, String elementId) throws Exception {
+		asysUsrElement uePage1 = new asysUsrElement(con);
+		uePage1.m_archive = "MAIN";
+		uePage1.m_elementId = "XTORM_MAIN::"+elementId+"::IMAGE";
+		int ret = uePage1.getContent(path+"/"+elementId + ".png", "", "");
+		if (ret != 0) {
+			System.out.println("["+Thread.currentThread().getName() +"] Error - download, " + uePage1.m_lastError);
+//			log.error("["+Thread.currentThread().getName() +"] Error - download, " + uePage1.m_lastError);
+		}
+		else {
+//			log.debug("["+Thread.currentThread().getName() +"] Success - download, " + uePage1.m_elementId);
+		}
+	}
+	
 	public static String create(String filename, String classid ) throws Exception{
 		asysUsrElement uePage1 = new asysUsrElement(con);
 	//	uePage1.m_fileIn = is;

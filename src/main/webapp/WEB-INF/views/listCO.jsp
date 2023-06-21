@@ -15,25 +15,19 @@
 		<div class="table-responsive">
 	<table class="table table-striped table-sm" width="500" cellpadding="0" cellspacing="0" border="1">
 		<tr>
-<!-- 			<td>엘리먼트id</td>-->
 			<td>업무키</td>
 			<td>고객번호</td>
 			<td>고객이름</td>
 			<td>문서코드</td>
-<!-- 			<td>파일명</td>-->
-<!-- 			<td>생성일</td>-->
 			<td>담당자</td>
 			<td>담당업무코드</td>
 		</tr>
 		<c:forEach items="${listCO}" var="dto">
 		<tr>	
-<!--  			<td>${dto.elementid}</td>-->
 			<td><a href="content_view?img_key=${dto.img_key}">${dto.img_key}</a></td>
 			<td>${dto.cust_no}</td>
 			<td>${dto.cust_nm}</td>
 			<td>${dto.doc_cd}</td>
-<!-- 			<td>${dto.file_nm}</td>-->
-<!--			<td>${dto.enr_dtm}</td>-->
 			<td>${dto.enr_user_id}</td>
 			<td>${dto.enr_org_cd}</td>
 		</tr>
@@ -59,16 +53,15 @@
 			</div>
 		</div>
 		<script>
-			function fn_prev(page, range, rangeSizes, searchType, keyword) {
-				var page = ((range - 2) * rangeSize) + 1;
-				var range = range - 1;
-				
+		
+			function fn_prev(page, range, rangeSize, searchType, keyword) {
+				var page = parseInt((range - 2) * rangeSize) + 1;
+				var range = parseInt(range) - 1;
 				var url = "${pageContext.request.contextPath}/listCO";
 				url = url + "?page=" + page;
 				url = url + "&range=" + range;
 				url = url + "&searchType=" + searchType;
 				url = url + "&keyword=" + keyword;
-				
 				location.href = url;
 			}
 		
@@ -84,15 +77,14 @@
 			function fn_next(page, range, rangeSize, searchType, keyword) {
 				var page = parseInt((range * rangeSize)) + 1;
 				var range = parseInt(range) + 1;
-				
 				var url = "${pageContext.request.contextPath}/listCO";
 				url = url + "?page=" + page;
 				url = url + "&range=" + range;
 				url = url + "&searchType=" + searchType;
 				url = url + "&keyword=" + keyword;
-				
 				location.href = url;
 			}
+			
 			$(document).on('click', '#btnSearch', function(e){
 				e.preventDefault();
 				var url = "${pageContext.request.contextPath}/listCO";
@@ -106,7 +98,7 @@
 		<div id="paginationBox">
 			<ul class="pagination">
 				<c:if test="${pagination.prev}">
-					<li class="page-item"><a class="page-link" href="#" onClick="fn_prev('${pagination.page}', '${pagination.range}', '${pagination.rangeSize}', '${pagination.searchType }', '${pagination.keyword }')">Previous</a></li>
+					<li class="page-item"><a class="page-link" href="#" onClick="fn_prev('${pagination.page}', '${pagination.range}', '${pagination.rangeSize}', '${pagination.searchType}', '${pagination.keyword}')" >Previous</a></li>
 				</c:if>
 	
 				<c:forEach begin="${pagination.startPage}" end="${pagination.endPage}" var="idx">
@@ -114,7 +106,7 @@
 				</c:forEach>
 					
 				<c:if test="${pagination.next}">
-					<li class="page-item"><a class="page-link" href="#" onClick="fn_next('${pagination.range}', '${pagination.range}', '${pagination.rangeSize}', '${pagination.searchType }', '${pagination.keyword }')" >Next</a></li>
+					<li class="page-item"><a class="page-link" href="#" onClick="fn_next('${pagination.page}', '${pagination.range}', '${pagination.rangeSize}', '${pagination.searchType}', '${pagination.keyword}')" >Next</a></li>
 				</c:if>
 			</ul>
 		</div>

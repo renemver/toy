@@ -13,11 +13,11 @@
 <article>
 		<div class="container">
 		<div class="table-responsive">
-	<table class="table table-striped table-sm" width="500" cellpadding="0" cellspacing="0" border="1">
+	<table class="table table-striped table-sm" cellpadding="0" cellspacing="0" border="1">
 		<form method="post" action="write_content" enctype="multipart/form-data">
 		<tr>
-			<td></td>
-			<td>eid</td>
+			<td>선택</td>
+			<td>Elementid</td>
 			<td>업무키</td>
 			<td>고객번호</td>
 			<td>고객이름</td>
@@ -26,7 +26,8 @@
 			<td>등록날짜</td>
 			<td>담당자</td>
 			<td>담당업무코드</td>
-			<td>삭제코드</td>		
+			<td>삭제코드</td>
+			<td>보기</td>
 		</tr>
 		<c:forEach items="${content_view}" var="dto">
 			<tr>
@@ -41,7 +42,7 @@
 			    <td><input type="hidden" name="enr_user_id" value="${dto.enr_user_id}">${dto.enr_user_id}</td>
 			    <td><input type="hidden" name="enr_org_cd" value="${dto.enr_org_cd}">${dto.enr_org_cd}</td>
 			    <td><input type="hidden" name="del_yn" value="${dto.del_yn}">${dto.del_yn}</td>
-			    		
+			    <td><a href="display?elementid=${dto.elementid}">PNG</a></td>		    		
 			 </tr>
 		</c:forEach>
 		

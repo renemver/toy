@@ -59,7 +59,7 @@
 			</div>
 		</div>
 		<script>
-			function fn_prev(page, range, rangeSizes, searchType, keyword) {
+			function fn_prev(page, range, rangeSize, searchType, keyword) {
 				var page = ((range - 2) * rangeSize) + 1;
 				var range = range - 1;
 				

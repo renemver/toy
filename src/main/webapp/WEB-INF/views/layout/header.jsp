@@ -41,16 +41,16 @@
 			     수신
 			  </button>
 			  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-			  		<a class="dropdown-item" value="001" onClick="deposite('001')">거래 신청서</a>
-			    	<a class="dropdown-item" value="002" onClick="deposite('002')">예금잔액증명 의뢰서</a>
-			    	<a class="dropdown-item" value="003" onClick="deposite('003')">위임장</a>
-			    	<a class="dropdown-item" value="004" onClick="deposite('004')">정기예금 월 이자 자동이체 신청서</a>
-			    	<a class="dropdown-item" value="005" onClick="deposite('005')">제신고 및 재발급 신청서</a>
-			    	<a class="dropdown-item" value="006" onClick="deposite('006')">전자금융서비스 이용신청서</a>
-			    	<a class="dropdown-item" value="007" onClick="deposite('007')">상속예금(지급 명의 변경) 의뢰 및 이자소득 귀속동의서</a>
-			    	<a class="dropdown-item" value="008" onClick="deposite('008')">CMS출금이체 신청서</a>
-			    	<a class="dropdown-item" value="009" onClick="deposite('009')">비거주자 판정표</a>
-			    	<a class="dropdown-item" value="010" onClick="deposite('010')">세금우대 적용배재 신청서</a>
+			  		<a class="dropdown-item" value="001" onClick="deposit('001')">거래 신청서</a>
+			    	<a class="dropdown-item" value="002" onClick="deposit('002')">예금잔액증명 의뢰서</a>
+			    	<a class="dropdown-item" value="003" onClick="deposit('003')">위임장</a>
+			    	<a class="dropdown-item" value="004" onClick="deposit('004')">정기예금 월 이자 자동이체 신청서</a>
+			    	<a class="dropdown-item" value="005" onClick="deposit('005')">제신고 및 재발급 신청서</a>
+			    	<a class="dropdown-item" value="006" onClick="deposit('006')">전자금융서비스 이용신청서</a>
+			    	<a class="dropdown-item" value="007" onClick="deposit('007')">상속예금(지급 명의 변경) 의뢰 및 이자소득 귀속동의서</a>
+			    	<a class="dropdown-item" value="008" onClick="deposit('008')">CMS출금이체 신청서</a>
+			    	<a class="dropdown-item" value="009" onClick="deposit('009')">비거주자 판정표</a>
+			    	<a class="dropdown-item" value="010" onClick="deposit('010')">세금우대 적용배재 신청서</a>
 			  </div>
 			</div>
 			
@@ -80,7 +80,7 @@
 			url = url + "?element=" + element;
 			location.href = url;
 		}
-		function deposite(element) {
+		function deposit(element) {
 			var url = "${pageContext.request.contextPath}/listDP";
 			url = url + "?element=" + element;
 			location.href = url;

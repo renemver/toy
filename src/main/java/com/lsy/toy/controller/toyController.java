@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.nio.file.Files;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
@@ -17,9 +18,13 @@ import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -306,6 +311,10 @@ public class toyController {
 	         while((read = bis.read()) != -1) {
 	             sos.write(read);
 	         }
+	         
+	         File dfile = new File(filepath +"/"+ eid);
+	         dfile.delete();
+	         
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}finally {
@@ -434,6 +443,34 @@ request.getParameter("file_nm"), timestamp, request.getParameter("enr_user_id"),
 		
 		return "redirect:/list";
 	}
+	
+	@RequestMapping("/display")
+	public ResponseEntity<byte[]> getImage(String fileName, HttpServletRequest request){
+		System.out.println("display");
+		
+		String filepath = "D:/temp";
+		String eid = request.getParameter("elementid");
+
+		try {
+			EcmUtil.download_view(filepath, eid);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		File file = new File(filepath + "/" + eid + ".png");
+		ResponseEntity<byte[]> result = null;
+		try {
+			HttpHeaders header = new HttpHeaders();	
+			header.add("Content-type", Files.probeContentType(file.toPath()));		
+			result = new ResponseEntity<byte[]>(FileCopyUtils.copyToByteArray(file), header, HttpStatus.OK);
+			
+		}catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+	
 	
 }
 
