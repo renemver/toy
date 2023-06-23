@@ -28,8 +28,8 @@
   </style>
 </head>
 <body>
-<div id="tile_header"><tiles:insertAttribute name="tile_header" /></div>
-<div id="tile_body"><tiles:insertAttribute name="tile_body" /></div>
+<div id="tile_header"><tiles:insertAttribute name="tile_header" ignore="true"/></div>
+<div id="tile_body"><tiles:insertAttribute name="tile_body" ignore="true"/></div>
 
 </body>
 </html>

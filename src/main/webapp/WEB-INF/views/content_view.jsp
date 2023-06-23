@@ -10,6 +10,7 @@
 	<title>content view</title>
 </head>
 <body>
+<c:if test="${sessionScope.enr_user_no!=null}">
 <article>
 		<div class="container">
 		<div class="table-responsive">
@@ -42,7 +43,7 @@
 			    <td><input type="hidden" name="enr_user_id" value="${dto.enr_user_id}">${dto.enr_user_id}</td>
 			    <td><input type="hidden" name="enr_org_cd" value="${dto.enr_org_cd}">${dto.enr_org_cd}</td>
 			    <td><input type="hidden" name="del_yn" value="${dto.del_yn}">${dto.del_yn}</td>
-			    <td><a href="display?elementid=${dto.elementid}">PNG</a></td>		    		
+			    <td><a href="display?elementid=${dto.elementid}?file_nm=${dto.file_nm}">보기</a></td>		    		
 			 </tr>
 		</c:forEach>
 		
@@ -76,13 +77,17 @@
 			</script>
 		</tr>
 		<table class="table table-striped table-sm" width="500" cellpadding="0" cellspacing="0" border="1">
-		<tr><td>등록 파일 선택 : <input type="file" multiple="multiple" name="file"
-			accept=".hwp, .doc, .docx, .ppt, .pptx, .xls, .xlsx, .txt, .csv, .jpg, .jpeg, .gif, .png, .bmp, .pdf">
-			<input type="submit" value="이미지등록" > </td> 
-			<td>변경 파일 선택 : <input type="file" name="replace_file" 
-			accept=".hwp, .doc, .docx, .ppt, .pptx, .xls, .xlsx, .txt, .csv, .jpg, .jpeg, .gif, .png, .bmp, .pdf">
-			<input type="submit" value="이미지변경" onclick='return submit2(this.form);'> </td> 
-			<td><input type="submit" value="삭제" onclick='return submit3(this.form);'></td>
+		<tr>
+			<td><c:if test="${sessionScope.create_grant!='N'}">등록 파일 선택 : <input type="file" multiple="multiple" name="file"
+			accept=".hwp, .doc, .docx, .ppt, .pptx, .xls, .xlsx, .tif, .jpg, .png, .bmp, .pdf">
+			<input type="submit" value="이미지등록" ></c:if> </td> 
+			
+			<td><c:if test="${sessionScope.update_grant!='N'}">변경 파일 선택 : <input type="file" name="replace_file" 
+			accept=".hwp, .doc, .docx, .ppt, .pptx, .xls, .xlsx, .tif, .jpg, .png, .bmp, .pdf">
+			<input type="submit" value="이미지변경" onclick='return submit2(this.form);'> </c:if></td> 
+			
+			<td><c:if test="${sessionScope.delete_grant!='N'}">
+			<input type="submit" value="삭제" onclick='return submit3(this.form);'></c:if></td>
 			<td><input type="submit" value="다운로드" onclick='return submit4(this.form);'></td>
 			</tr></table>
 		</form>
@@ -90,5 +95,6 @@
 		</div>
 		</div>
 	</article>
+	</c:if>
 </body>
 </html>

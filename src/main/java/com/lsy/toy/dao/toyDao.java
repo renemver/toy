@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -66,7 +68,7 @@ public class toyDao implements IDao{
 	}
 	
 	public UserVO getUserInfo(String enr_user_id){
-		return sqlSession.selectOne("com.lsy.toy.dao.mapper.userMapper.getUserInfo", enr_user_id);
+		return sqlSession.selectOne("com.lsy.toy.dao.mapper.IDao.getUserInfo", enr_user_id);
 	}
 	
 	public void insertUser(String ENR_USER_NO,String ENR_USER_ID,
@@ -76,7 +78,20 @@ public class toyDao implements IDao{
 			String CREATE_GRANT,String READ_GRANT,String UPDATE_GRANT,String DELETE_GRANT,String ENR_USER_PW){}
 	
 	public int deleteUser(String enr_user_id){
-		return sqlSession.delete("com.lsy.toy.dao.mapper.userMapper.deleteUser", enr_user_id);
+		return sqlSession.delete("com.lsy.toy.dao.mapper.IDao.deleteUser", enr_user_id);
+	}
+
+	public String loginCheck(@Param("enr_user_no") String enr_user_no, @Param("enr_user_pw") String enr_user_pw, HttpSession session) {
+		String enr_user_id = sqlSession.selectOne("com.lsy.toy.dao.mapper.IDao.loginCheck");
+		return enr_user_id;
+	}
+	
+	public UserVO viewMember(UserVO vo) {
+		return sqlSession.selectOne("com.lsy.toy.dao.mapper.IDao.viewMember", vo);
+	}
+	
+	public void logout(HttpSession session) {
+		session.invalidate();
 	}
 }
 

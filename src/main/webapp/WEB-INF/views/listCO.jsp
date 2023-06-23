@@ -10,6 +10,7 @@
 	<title>Board List</title>
 </head>
 <body>
+	<c:if test="${sessionScope.enr_user_no!=null}">
 	<article>
 		<div class="container">
 		<div class="table-responsive">
@@ -113,5 +114,6 @@
 		<!-- pagination{e} -->
 		</div>
 	</article>
+		</c:if>
 </body>
 </html>

@@ -26,11 +26,11 @@ public class EcmUtil {
 		}
 	}
 
-	public static void download_view(String path, String elementId) throws Exception {
+	public static void download_view(String path, String elementId, String ext) throws Exception {
 		asysUsrElement uePage1 = new asysUsrElement(con);
 		uePage1.m_archive = "MAIN";
 		uePage1.m_elementId = "XTORM_MAIN::"+elementId+"::IMAGE";
-		int ret = uePage1.getContent(path+"/"+elementId + ".png", "", "");
+		int ret = uePage1.getContent(path+"/"+elementId + "." + ext, "", "");
 		if (ret != 0) {
 			System.out.println("["+Thread.currentThread().getName() +"] Error - download, " + uePage1.m_lastError);
 //			log.error("["+Thread.currentThread().getName() +"] Error - download, " + uePage1.m_lastError);

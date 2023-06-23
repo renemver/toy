@@ -437,7 +437,6 @@ request.getParameter("file_nm"), timestamp, request.getParameter("enr_user_id"),
 		logger.info("insertUser()");
 
 		IDao dao = sqlSession.getMapper(IDao.class);
-		
 		dao.insertUser(request.getParameter("enr_user_no"), request.getParameter("enr_user_id"), 
 		request.getParameter("enr_user_position"), request.getParameter("enr_user_group"), request.getParameter("enr_user_pw"));
 		
@@ -449,15 +448,18 @@ request.getParameter("file_nm"), timestamp, request.getParameter("enr_user_id"),
 		System.out.println("display");
 		
 		String filepath = "D:/temp";
-		String eid = request.getParameter("elementid");
-
+		String str[] = request.getParameter("elementid").split("\\?");
+		String eid = str[0];
+		String filenm[] = str[1].split("\\=");
+		String file_nm[] = filenm[1].split("\\.");
+		String ext = file_nm[1];
 		try {
-			EcmUtil.download_view(filepath, eid);
+			EcmUtil.download_view(filepath, eid, ext);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		File file = new File(filepath + "/" + eid + ".png");
+		File file = new File(filepath + "/" + eid + "." +ext);
 		ResponseEntity<byte[]> result = null;
 		try {
 			HttpHeaders header = new HttpHeaders();	
@@ -466,6 +468,12 @@ request.getParameter("file_nm"), timestamp, request.getParameter("enr_user_id"),
 			
 		}catch (IOException e) {
 			e.printStackTrace();
+		}
+		
+		try {
+			file.delete();
+		}catch(Exception ex) {
+			logger.error(ex.getMessage());
 		}
 		
 		return result;

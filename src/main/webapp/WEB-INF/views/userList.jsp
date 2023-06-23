@@ -1,6 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@ include file="/WEB-INF/views/layout/header.jsp"%>
+<html>
+<head>
+<!-- Bootstrap CSS -->
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Board List</title>
+</head>
 <script>
 	$(document).on('click', '#btnSearch', function(e){
 		e.preventDefault();
@@ -52,6 +59,8 @@
 	
 </script>
  
+<body>
+<c:if test="${sessionScope.enr_user_no!=null}">
 <article>
 	<div class="container">
 		<h2>User list</h2>
@@ -104,7 +113,7 @@
 			</table>
 		</div>
 		<div>
-		<a href="list">목록으로</td>
+		<a href="/">홈으로</td>
 		</div>
 		<!-- pagination{s} -->
 		<!-- 
@@ -145,3 +154,5 @@
 		<!-- search{e} -->
 	</div>
 </article>
+</c:if>
+</body>

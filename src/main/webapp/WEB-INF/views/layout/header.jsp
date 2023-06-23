@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -20,11 +21,10 @@
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
 	<ul class="navbar-nav navbar-dark">
 		<li class="nav-item dropdown">
-			<a class="nav-link">Toy</a>
+			<a class="nav-link" href="/toy">Toy</a>
 		</li>
+		<c:if test="${sessionScope.enr_user_no!=null}">
 		<!-- 드롭다운 메뉴-->
-			<form action="listCO" method="post">
-			<input type="hidden" name="httpMethod" id="httpMethod" value="">
             <div class="dropdown">
 			  <button class="btn btn-secondary dropdown-toggle" type="button" id="commondrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 			    공통
@@ -34,7 +34,6 @@
 			    <li><a class="dropdown-item" value="003" onClick="common('003')">증빙서류</a></li>
 			  </ul>
 			</div>
-			</form>
 			
 			<div class="dropdown">
 			  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -71,6 +70,12 @@
 			</div>
 			
 		<button type="button href="#" onClick="fn_btnuserList()">유저목록</button>
+		</c:if>
+		<c:choose>
+			<c:when test="${sessionScope.enr_user_no==null}">
+			<a href="${pageContext.request.contextPath}/login">로그인</a></c:when>
+			<c:otherwise><a href="${pageContext.request.contextPath}/login/logout.do">로그아웃</a></c:otherwise>
+		</c:choose>
 	</ul>
 </nav>
 

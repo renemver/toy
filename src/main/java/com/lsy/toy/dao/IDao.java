@@ -4,6 +4,10 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.lsy.toy.dto.toyDto;
 import com.lsy.toy.user.dto.UserVO;
 import com.lsy.toy.util.Search;
@@ -42,4 +46,7 @@ public interface IDao {
 			String CREATE_GRANT,String READ_GRANT,String UPDATE_GRANT,String DELETE_GRANT,String ENR_USER_PW);
 	public int deleteUser(String enr_user_id);
 	
+	public String loginCheck(@Param("enr_user_no") String enr_user_no, @Param("enr_user_pw") String enr_user_pw, HttpSession session);
+	public UserVO viewMember(UserVO vo);
+	public void logout(HttpSession session);
 }

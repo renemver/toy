@@ -8,7 +8,7 @@
 	<select id="list" resultType="com.lsy.toy.dto.toyDto">
 		select img_key, cust_no, cust_nm, doc_cd, enr_user_id, enr_org_cd from 
 		(
-		select row_number() over (order by img_key) NUM, A.* from X354056.TOY_BIZ_INFO A 
+		select row_number() over (order by img_key) NUM, A.* from B354056.TOY_BIZ_INFO A 
 		<if test="keyword != null and keyword != '' ">
 			<if test="searchType=='img_key'">
 				WHERE img_key like #{keyword} || '%' AND ENR_DTM >= TO_CHAR(SYSDATE-90, 'YYYYMMDD')
@@ -25,7 +25,7 @@
 	<select id="listCO" resultType="com.lsy.toy.dto.toyDto">
 		select img_key, cust_no, cust_nm, doc_cd, enr_user_id, enr_org_cd from 
 		(
-		select row_number() over (order by img_key) NUM, A.* from X354056.TOY_COMMON_TB A 
+		select row_number() over (order by img_key) NUM, A.* from B354056.TOY_COMMON_TB A 
 		<if test="keyword != null and keyword != '' ">
 			<if test="searchType=='img_key'">
 				WHERE img_key like #{keyword} || '%' AND ENR_DTM >= TO_CHAR(SYSDATE-90, 'YYYYMMDD')
@@ -41,7 +41,7 @@
 	<select id="listLN" resultType="com.lsy.toy.dto.toyDto">
 		select img_key, cust_no, cust_nm, doc_cd, enr_user_id, enr_org_cd from 
 		(
-		select row_number() over (order by img_key) NUM, A.* from X354056.TOY_LOAN_TB A 
+		select row_number() over (order by img_key) NUM, A.* from B354056.TOY_LOAN_TB A 
 		<if test="keyword != null and keyword != '' ">
 			<if test="searchType=='img_key'">
 				WHERE img_key like #{keyword} || '%' AND ENR_DTM >= TO_CHAR(SYSDATE-90, 'YYYYMMDD')
@@ -57,7 +57,7 @@
 	<select id="listDP" resultType="com.lsy.toy.dto.toyDto">
 		select img_key, cust_no, cust_nm, doc_cd, enr_user_id, enr_org_cd from 
 		(
-		select row_number() over (order by img_key) NUM, A.* from X354056.TOY_DEPOSIT_TB A 
+		select row_number() over (order by img_key) NUM, A.* from B354056.TOY_DEPOSIT_TB A 
 		<if test="keyword != null and keyword != '' ">
 			<if test="searchType=='img_key'">
 				WHERE img_key like #{keyword} || '%' AND ENR_DTM >= TO_CHAR(SYSDATE-90, 'YYYYMMDD')
@@ -70,54 +70,49 @@
 		where NUM BETWEEN #{startList}+1 and #{startList}+1+#{listSize}-1
 		group by img_key, cust_no, cust_nm, doc_cd, enr_user_id, enr_org_cd order by img_key
 	</select>
-	<!-- 
-	<select id="eidlist" resultType="com.lsy.toy.dto.toyDto">
-		select img_key, cust_no, cust_nm, doc_cd, enr_user_id, enr_org_cd from X354056.TOY_BIZ_INFO 
-		group by img_key, cust_no, cust_nm, doc_cd, enr_user_id, enr_org_cd order by img_key
-	</select>
-	 -->
+	
 	<select id="content_view" resultType="com.lsy.toy.dto.toyDto">
-		select * from X354056.TOY_BIZ_INFO where img_key = #{param1}
+		select * from B354056.TOY_BIZ_INFO where img_key = #{param1}
 	</select>
 	
 	<insert id="write">
-		INSERT INTO X354056.TOY_BIZ_INFO (elementid,img_key,cust_no,cust_nm,doc_cd,file_nm,enr_dtm,enr_user_id,enr_org_cd,del_yn) 
+		INSERT INTO B354056.TOY_BIZ_INFO (elementid,img_key,cust_no,cust_nm,doc_cd,file_nm,enr_dtm,enr_user_id,enr_org_cd,del_yn) 
 		VALUES (#{param1},#{param2},#{param3},#{param4},#{param5},#{param6},#{param7},#{param8},#{param9},#{param10})
 	</insert>
 	
 	<insert id="write_LN">
-		INSERT INTO X354056.TOY_LOAN_TB (img_key,cust_no,cust_nm,doc_cd,enr_dtm,enr_user_id,enr_org_cd,del_yn) 
+		INSERT INTO B354056.TOY_LOAN_TB (img_key,cust_no,cust_nm,doc_cd,enr_dtm,enr_user_id,enr_org_cd,del_yn) 
 		VALUES (#{param1},#{param2},#{param3},#{param4},#{param5},#{param6},#{param7},#{param8})
 	</insert>
 	<insert id="write_DP">
-		INSERT INTO X354056.TOY_DEPOSIT_TB (img_key,cust_no,cust_nm,doc_cd,enr_dtm,enr_user_id,enr_org_cd,del_yn) 
+		INSERT INTO B354056.TOY_DEPOSIT_TB (img_key,cust_no,cust_nm,doc_cd,enr_dtm,enr_user_id,enr_org_cd,del_yn) 
 		VALUES (#{param1},#{param2},#{param3},#{param4},#{param5},#{param6},#{param7},#{param8})
 	</insert>
 	<insert id="write_CO">
-		INSERT INTO X354056.TOY_COMMON_TB (img_key,cust_no,cust_nm,doc_cd,enr_dtm,enr_user_id,enr_org_cd,del_yn) 
+		INSERT INTO B354056.TOY_COMMON_TB (img_key,cust_no,cust_nm,doc_cd,enr_dtm,enr_user_id,enr_org_cd,del_yn) 
 		VALUES (#{param1},#{param2},#{param3},#{param4},#{param5},#{param6},#{param7},#{param8})
 	</insert>
 	
 	<update id="modify">
-		UPDATE X354056.TOY_BIZ_INFO set cust_no = #{param1}, cust_nm = #{param2}, doc_cd = #{param3}, 
+		UPDATE B354056.TOY_BIZ_INFO set cust_no = #{param1}, cust_nm = #{param2}, doc_cd = #{param3}, 
 		file_nm = #{param4}, enr_dtm = #{param5}, enr_user_id = #{param6}, enr_org_cd = #{param7} where img_key = #{param8}
 	</update>
 	<update id="modify_content">
-		UPDATE X354056.TOY_BIZ_INFO set file_nm = #{param1}, enr_dtm = #{param2} where elementid = #{param3}
+		UPDATE B354056.TOY_BIZ_INFO set file_nm = #{param1}, enr_dtm = #{param2} where elementid = #{param3}
 	</update>
 	
 	<update id="delete">
-		UPDATE X354056.TOY_BIZ_INFO SET del_yn = 'Y' where elementid = #{param1}
+		UPDATE B354056.TOY_BIZ_INFO SET del_yn = 'Y' where elementid = #{param1}
 	</update>
 	<update id="delete_content">
-		UPDATE X354056.TOY_BIZ_INFO SET del_yn = 'Y' where elementid = #{param1}
+		UPDATE B354056.TOY_BIZ_INFO SET del_yn = 'Y' where elementid = #{param1}
 	</update>
 	
 	<select id="getBoardListCnt" resultType="int">
 		SELECT
 			count(*) as listCnt
 		FROM
-			X354056.TOY_BIZ_INFO
+			B354056.TOY_BIZ_INFO
 		<trim prefix="WHERE" prefixOverrides="AND|OR">
 		<if test="keyword != null and keyword != '' ">
 			<if test="searchType=='img_key'">
@@ -143,9 +138,9 @@
 			, UPDATE_GRANT
 			, DELETE_GRANT
 		FROM
-			X354056.TOY_USER_TB
+			B354056.TOY_USER_TB
 		WHERE
-			ENR_USER_ID = #{ENR_USER_ID}
+			ENR_USER_ID = #{ENR_USER_ID} AND ENR_USER_PW = #{ENR_USER_PW}
 	</select>
 	
 	<select id="getUserList" resultType="com.lsy.toy.user.dto.UserVO">
@@ -159,17 +154,17 @@
 			, UPDATE_GRANT
 			, DELETE_GRANT
 		FROM
-			X354056.TOY_USER_TB
+			B354056.TOY_USER_TB
 	</select>
 	
 	<insert id="insertUser" parameterType="com.lsy.toy.user.dto.UserVO">
-		INSERT INTO X354056.TOY_USER_TB (ENR_USER_NO, ENR_USER_ID, ENR_USER_POSITION, 
+		INSERT INTO B354056.TOY_USER_TB (ENR_USER_NO, ENR_USER_ID, ENR_USER_POSITION, 
 		ENR_USER_GROUP, CREATE_GRANT, READ_GRANT, UPDATE_GRANT, DELETE_GRANT, ENR_USER_PW)
 		VALUES (#{param1},#{param2},#{param3},#{param4},'N','Y','N','N',#{param5})
 	</insert>
 	
 	<update id="updateUser" parameterType="com.lsy.toy.user.dto.UserVO">
-		UPDATE X354056.TOY_USER_TB SET
+		UPDATE B354056.TOY_USER_TB SET
 			ENR_USER_NO = #{param1}
 			, ENR_USER_ID = #{param2}
 			, ENR_USER_POSITION = #{param3}
@@ -184,8 +179,18 @@
 	</update>
 	
 	<delete id="deleteUser" parameterType="int">
-		DELETE FROM X354056.TOY_USER_TB
+		DELETE FROM B354056.TOY_USER_TB
 		WHERE ENR_USER_ID = #{param1}
 	</delete>
+	
+	<select id="loginCheck" resultType="String">
+		SELECT enr_user_id FROM B354056.TOY_USER_TB
+		WHERE enr_user_no = #{enr_user_no} AND enr_user_pw = #{enr_user_pw}
+	</select>
+	
+	<select id="viewMember" resultType="com.lsy.toy.user.dto.UserVO">
+		SELECT * FROM B354056.TOY_USER_TB
+		WHERE enr_user_no = #{enr_user_no} AND enr_user_pw = #{enr_user_pw}
+	</select>
 	
 </mapper>
