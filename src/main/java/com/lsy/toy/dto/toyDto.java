@@ -14,6 +14,8 @@ public class toyDto{
 	Timestamp enr_dtm;
 	String enr_user_id;
 	String enr_org_cd;
+	String seq_no;
+	String rrn_no;
 	String del_yn;
 	
 	public toyDto(){}
@@ -111,5 +113,21 @@ public class toyDto{
 
 	public void setDel_yn(String del_yn) {
 		this.del_yn = del_yn;
+	}
+
+	public String getSeq_no() {
+		return seq_no;
+	}
+
+	public void setSeq_no(String seq_no) {
+		this.seq_no = seq_no;
+	}
+
+	public String getRrn_no() {
+		return rrn_no;
+	}
+
+	public void setRrn_no(String rrn_no) {
+		this.rrn_no = rrn_no;
 	}
 }

@@ -9,17 +9,10 @@
 		$("#form").submit();
 	});
 	
-	$(document).on('click', '#btnCancle', function(e){
-		e.preventDefault();
 
-        $('#enr_user_no').val('');
-		$('#enr_user_id').val('');
-		$('#enr_user_pw').val('');
-		$('#enr_user_re_pwd').val('');
-		$('#enr_user_position').val('');
-		$('#enr_user_group').val('');
-		//location.href="${pageContext.request.contextPath}/home";
-	});
+	function fn_btnCancel(){
+		location.href ="${pageContext.request.contextPath}/login/login";
+     }    
 
 </script>
 
@@ -74,7 +67,7 @@
 		</div>
 		<div style="margin-top:10px">
 			<button type="button" class="btn btn-sm btn-primary" href="insertUser" id="btnSignup">회원가입</button>
-			<button type="button" class="btn btn-sm btn-primary" href="login" id="btnCancel">취소</button>
+			<button type="button" class="btn btn-sm btn-primary" href="#" onClick="fn_btnCancel()">취소</button>
 		</div>
 	</div>
 	

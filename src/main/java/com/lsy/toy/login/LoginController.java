@@ -13,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.lsy.toy.dao.IDao;
 import com.lsy.toy.user.dto.UserVO;
+import com.lsy.toy.util.AESCryptoUtil;
 
 @Controller
 @RequestMapping(value = "/login")
@@ -45,13 +46,19 @@ public class LoginController {
 		String enr_user_no = request.getParameter("enr_user_no");
 		String enr_user_pw = request.getParameter("enr_user_pw");
 		Boolean result = false;
-		
+		AESCryptoUtil aes = new AESCryptoUtil();
+		String crpyt_pw = null;
+		try {
+			crpyt_pw = aes.encrypt(enr_user_pw);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		IDao dao = sqlSession.getMapper(IDao.class);
-		String res = dao.loginCheck(enr_user_no, enr_user_pw, session);
+		String res = dao.loginCheck(enr_user_no, crpyt_pw, session);
 		
 		if(res!=null) {
 			vo.setEnr_user_no(enr_user_no);
-			vo.setEnr_user_pw(enr_user_pw);
+			vo.setEnr_user_pw(crpyt_pw);
 			UserVO vo2 = dao.viewMember(vo);
 			session.setAttribute("enr_user_no", vo2.getEnr_user_no());
 			session.setAttribute("enr_user_id", vo2.getEnr_user_id());

@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,18 +26,17 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.lsy.toy.command.toyCommand;
 import com.lsy.toy.dao.IDao;
 import com.lsy.toy.dao.toyDao;
-import com.lsy.toy.user.dto.UserVO;
+import com.lsy.toy.dto.toyDto;
+import com.lsy.toy.util.AESCryptoUtil;
 import com.lsy.toy.util.EcmUtil;
 import com.lsy.toy.util.Search;
 
@@ -101,9 +101,22 @@ public class toyController {
 		//전체 게시글 개수
 		int listCnt = dao.getBoardListCnt(search);
 		search.pageInfo(page, range, listCnt);
+
+		AESCryptoUtil aes = new AESCryptoUtil();
+		String dec_rrn = null;
 		
+		ArrayList<toyDto> list = dao.listCO(search);
+		for(int i=0; i<list.size(); i++) {
+			try {
+				dec_rrn = aes.decrypt(list.get(i).getRrn_no());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			list.get(i).setRrn_no(dec_rrn);
+		}
+
 		model.addAttribute("pagination", search);
-		model.addAttribute("listCO", dao.listCO(search));
+		model.addAttribute("listCO", list);
 				
 		return "listCO";
 	}
@@ -133,8 +146,21 @@ public class toyController {
 		int listCnt = dao.getBoardListCnt(search);
 		search.pageInfo(page, range, listCnt);
 		
+		AESCryptoUtil aes = new AESCryptoUtil();
+		String dec_rrn = null;
+		
+		ArrayList<toyDto> list = dao.listLN(search);
+		for(int i=0; i<list.size(); i++) {
+			try {
+				dec_rrn = aes.decrypt(list.get(i).getRrn_no());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			list.get(i).setRrn_no(dec_rrn);
+		}
+		
 		model.addAttribute("pagination", search);
-		model.addAttribute("listLN", dao.listLN(search));
+		model.addAttribute("listLN", list);
 				
 		return "listLN";
 	}
@@ -164,8 +190,21 @@ public class toyController {
 		int listCnt = dao.getBoardListCnt(search);
 		search.pageInfo(page, range, listCnt);
 		
+		AESCryptoUtil aes = new AESCryptoUtil();
+		String dec_rrn = null;
+		
+		ArrayList<toyDto> list = dao.listDP(search);
+		for(int i=0; i<list.size(); i++) {
+			try {
+				dec_rrn = aes.decrypt(list.get(i).getRrn_no());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			list.get(i).setRrn_no(dec_rrn);
+		}
+		
 		model.addAttribute("pagination", search);
-		model.addAttribute("listDP", dao.listDP(search));
+		model.addAttribute("listDP", list);
 				
 		return "listDP";
 	}
@@ -184,28 +223,45 @@ public class toyController {
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 		IDao dao = sqlSession.getMapper(IDao.class);
 		String doccd = request.getParameter("doc_cd").substring(0,2);
-		
+
+		AESCryptoUtil aes = new AESCryptoUtil();
+		String crypt_rrn = null;
+		try {
+			crypt_rrn = aes.encrypt(request.getParameter("rrn_no"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		if(doccd.equals("01")) {
 			dao.write_CO(request.getParameter("img_key"), request.getParameter("cust_no"), request.getParameter("cust_nm"), 
-			request.getParameter("doc_cd"), timestamp, request.getParameter("enr_user_id"), request.getParameter("enr_org_cd") , "N" );
+			request.getParameter("doc_cd"), timestamp, request.getParameter("enr_user_id"), request.getParameter("enr_org_cd"),
+			"N", crypt_rrn);
 		}
 		else if(doccd.equals("02")) {
 			dao.write_DP(request.getParameter("img_key"), request.getParameter("cust_no"), request.getParameter("cust_nm"), 
-			request.getParameter("doc_cd"), timestamp, request.getParameter("enr_user_id"), request.getParameter("enr_org_cd") , "N" );
+			request.getParameter("doc_cd"), timestamp, request.getParameter("enr_user_id"), request.getParameter("enr_org_cd"), 
+			"N", crypt_rrn );
 		}
 		else if(doccd.equals("03")) {
 			dao.write_LN(request.getParameter("img_key"), request.getParameter("cust_no"), request.getParameter("cust_nm"), 
-			request.getParameter("doc_cd"), timestamp, request.getParameter("enr_user_id"), request.getParameter("enr_org_cd") , "N" );
+			request.getParameter("doc_cd"), timestamp, request.getParameter("enr_user_id"), request.getParameter("enr_org_cd"), 
+			"N", crypt_rrn);
 		}
 		return "redirect:list";
 	}
 
 	@RequestMapping("/write_content")
-	public String write_content(Model model, MultipartHttpServletRequest file) {
+	public String write_content(Model model, MultipartHttpServletRequest file, HttpServletRequest request) {
 		System.out.println("write_content()");
 		
 		List<MultipartFile> list = file.getFiles("file");
 		String img_key = null;
+		String cust_no = null;
+		String cust_nm = null;
+		String enr_user_id = null;
+		String enr_org_cd = null;
+		String rrn_no = null;
+		int seq_no = 1;
+		
 		for(int i = 0; i<list.size(); i++) {
 			String filepath = "D:/temp";
 			String fileRealName = list.get(i).getOriginalFilename();
@@ -217,17 +273,51 @@ public class toyController {
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
-			
+
+			IDao dao = sqlSession.getMapper(IDao.class);
 			String elementid = null;
 			String CC = "TOY_CC";
+			
 			img_key = file.getParameter("img_key");
 			String doc_cd = file.getParameter("doc_cd");
-			if(doc_cd.substring(0,2).equals("01"))
+			if(doc_cd==null) {
+				doc_cd = request.getParameter("dcd");
+			}
+			if(doc_cd.substring(0,2).equals("01")) {
 				CC = "CO_CC";
-			else if(doc_cd.substring(0,2).equals("02"))
+			}
+			else if(doc_cd.substring(0,2).equals("02")) {
 				CC = "DP_CC";
-			else if(doc_cd.substring(0,2).equals("03"))
+			}
+			else if(doc_cd.substring(0,2).equals("03")) {
 				CC = "LN_CC";
+			}
+			
+			if(img_key==null) {
+				img_key = request.getParameter("ikey");
+				toyDto dto = new toyDto();
+				if(CC.equals("CO_CC")) {
+					dto = dao.selectCO(img_key);
+				}else if(CC.equals("DP_CC")) {
+					dto = dao.selectDP(img_key);
+				}else if(CC.equals("LN_CC")) {
+					dto = dao.selectLN(img_key);
+				}
+				
+				cust_no = dto.getCust_no();
+				cust_nm = dto.getCust_nm();
+				enr_user_id = dto.getEnr_user_id();
+				enr_org_cd = dto.getEnr_org_cd();
+				rrn_no = dto.getRrn_no();
+			}
+			else {
+				cust_no = file.getParameter("cust_no");
+				cust_nm = file.getParameter("cust_nm");
+				enr_user_id = file.getParameter("enr_user_id");
+				enr_org_cd = file.getParameter("enr_org_cd");
+				rrn_no = file.getParameter("rrn_no");
+				seq_no = dao.getMaxNo(img_key) + 1;
+			}
 			
 			try {
 				elementid = EcmUtil.create(filepath, CC);
@@ -239,14 +329,8 @@ public class toyController {
 			}
 			
 			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-			IDao dao = sqlSession.getMapper(IDao.class);
-			
-			String cust_no = file.getParameter("cust_no");
-			String cust_nm = file.getParameter("cust_nm");
-			String enr_user_id = file.getParameter("enr_user_id");
-			String enr_org_cd = file.getParameter("enr_org_cd");
-			
-			dao.write(elementid, img_key, cust_no, cust_nm, doc_cd, fileRealName, timestamp, enr_user_id, enr_org_cd, "N" );
+			dao.write(elementid, img_key, cust_no, cust_nm, doc_cd, fileRealName, 
+					timestamp, enr_user_id, enr_org_cd, "N" ,rrn_no, seq_no );
 		}
 		 
 		return "redirect:content_view?img_key="+img_key;
@@ -257,8 +341,21 @@ public class toyController {
 			HttpServletRequest request, Model model) {
 		System.out.println("content_view()");
 	
+		AESCryptoUtil aes = new AESCryptoUtil();
+		String dec_rrn = null;
 		IDao dao = sqlSession.getMapper(IDao.class);
-		model.addAttribute("content_view", dao.content_view(request.getParameter("img_key")));
+		
+		ArrayList<toyDto> list = dao.content_view(request.getParameter("img_key"));
+		for(int i=0; i<list.size(); i++) {
+			try {
+				dec_rrn = aes.decrypt(list.get(i).getRrn_no());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			list.get(i).setRrn_no(dec_rrn);
+		}
+		model.addAttribute("content_view", list);
+		
 
 		String[] elementid = request.getParameterValues("ck");
 	
@@ -331,18 +428,44 @@ public class toyController {
 	}
 	
 	@RequestMapping(method=RequestMethod.POST, value="/modify")
-	public String modify(@RequestParam(value="checkbox", required=false)String value, 
-			HttpServletRequest request, Model model) {
+	public String modify(HttpServletRequest request, Model model) {
 		System.out.println("modify()");
-	
+
 		String img_key = request.getParameter("img_key");
-		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+		String doccd = request.getParameter("doc_cd").substring(0,2);
+		AESCryptoUtil aes = new AESCryptoUtil();
+		String crypt_rrn = null;
+		try {
+			crypt_rrn = aes.encrypt(request.getParameter("rrn_no"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		IDao dao = sqlSession.getMapper(IDao.class);
-		dao.modify( request.getParameter("cust_no"), request.getParameter("cust_nm"), request.getParameter("doc_cd"), 
-request.getParameter("file_nm"), timestamp, request.getParameter("enr_user_id"), request.getParameter("enr_org_cd"), img_key);	
+		dao.modify(request.getParameter("cust_no"), request.getParameter("cust_nm"), request.getParameter("doc_cd"), 
+				request.getParameter("enr_user_id"), request.getParameter("enr_org_cd"), crypt_rrn, img_key);	
 
+		if(doccd.equals("01")) {
+			dao.modify_CO( request.getParameter("cust_no"), request.getParameter("cust_nm"), crypt_rrn,
+			request.getParameter("doc_cd"), request.getParameter("enr_user_id"), request.getParameter("enr_org_cd") , img_key );
+		}
+		else if(doccd.equals("02")) {
+			dao.modify_DP( request.getParameter("cust_no"), request.getParameter("cust_nm"), crypt_rrn,
+			request.getParameter("doc_cd"), request.getParameter("enr_user_id"), request.getParameter("enr_org_cd") , img_key );
+		}
+		else if(doccd.equals("03")) {
+			dao.modify_LN( request.getParameter("cust_no"), request.getParameter("cust_nm"), crypt_rrn,
+			request.getParameter("doc_cd"), request.getParameter("enr_user_id"), request.getParameter("enr_org_cd") , img_key );
+		}
+		
 		return "redirect:content_view?img_key="+img_key;
+	}
+	
+	@RequestMapping("/modify_view")
+	public String modify_view(HttpServletRequest request, Model model) {
+		System.out.println("modify_view()");
+		request.getParameter("img_key");
+		return "modify_view";
 	}
 	
 	@RequestMapping(method=RequestMethod.POST, value="/modify_content")
@@ -377,21 +500,24 @@ request.getParameter("file_nm"), timestamp, request.getParameter("enr_user_id"),
 	}
 	
 	@RequestMapping("/delete")
-	public String delete(@RequestParam(value="checkbox", required=false)String value, 
-			HttpServletRequest request, Model model) {
+	public String delete(HttpServletRequest request, Model model) {
 		System.out.println("delete()");
 		String img_key = request.getParameter("img_key");
-		
+		String doc_cd = request.getParameter("doc_cd");
+		String chk = doc_cd.substring(0,2);
+		String refer = request.getHeader("Referer");
 		IDao dao = sqlSession.getMapper(IDao.class);
-		System.out.println(value);
-	
-		String str[] = value.split(",");
-		for(int i = 0 ; i<str.length; i++) {
-			String res = str[i];
-			dao.delete(res);
-		}
 
-		return "redirect:content_view?img_key="+img_key;
+		dao.deleteimgkey(img_key);
+		if(chk.equals("01")) {
+			dao.deleteimgkey_CO(img_key);}
+		else if(chk.equals("02")) {
+			dao.deleteimgkey_DP(img_key);	}
+		else if(chk.equals("03")) {
+			dao.deleteimgkey_LN(img_key);
+		}
+		
+		return "redirect:"+refer;
 	}
 	
 	@RequestMapping("/delete_content")
@@ -399,17 +525,102 @@ request.getParameter("file_nm"), timestamp, request.getParameter("enr_user_id"),
 			HttpServletRequest request, Model model) {
 		System.out.println("delete_content()");
 		String img_key = request.getParameter("img_key");
+		String doc_cd = request.getParameter("doc_cd");
+		String chk = doc_cd.substring(0,2);
 		
 		IDao dao = sqlSession.getMapper(IDao.class);
-		System.out.println(value);
-	
-		String str[] = value.split(",");
-		for(int i = 0 ; i<str.length; i++) {
-			String res = str[i];
-			dao.delete_content(res);
+		dao.deleteeid(value);
+		if(chk.equals("01")) {
+			dao.deleteeid_CO(img_key, doc_cd);}
+		else if(chk.equals("02")) {
+			dao.deleteeid_DP(img_key, doc_cd);}
+		else if(chk.equals("03")) {
+			dao.deleteeid_LN(img_key, doc_cd);
 		}
+		
 
 		return "redirect:content_view?img_key="+img_key;
+	}
+	
+	@RequestMapping("/menu_view")
+	public String menu_view(HttpServletRequest request, Model model) {
+		System.out.println("menu_view()");
+		
+		String img_key = null;
+	
+		IDao dao = sqlSession.getMapper(IDao.class);
+		model.addAttribute("menu_view", dao.menu_view(img_key));
+		
+		return "menu_view";
+	}
+	
+	@RequestMapping("/write_menu")
+	public String write_menu(Model model) {
+		System.out.println("write_menu()");
+		
+		return "write_menu";
+	}
+	
+	@RequestMapping("/write_menu_content")
+	public String write_menu_content(HttpServletRequest request, Model model) {
+		System.out.println("write_menu_content()");
+
+		IDao dao = sqlSession.getMapper(IDao.class);
+		String doc_cd = request.getParameter("main_cd")+request.getParameter("middle_cd")+request.getParameter("sub_cd");
+		dao.write_menu(doc_cd, request.getParameter("main_cd"), request.getParameter("middle_cd"), request.getParameter("sub_cd"),
+				request.getParameter("main_desc"), request.getParameter("middle_desc"), request.getParameter("sub_desc"));
+		
+		return "redirect:menu_view";
+	}
+	
+	@RequestMapping("/modify_menu")
+	public String modify_menu(Model model) {
+		System.out.println("modify_menu()");
+		
+		return "modify_menu";
+	}
+	
+	@RequestMapping("/modify_menu_content")
+	public String modify_menu_content(HttpServletRequest request, Model model) {
+		System.out.println("modify_menu_content()");
+		
+		String p_doc_cd = request.getParameter("doc_cd");
+		IDao dao = sqlSession.getMapper(IDao.class);
+		String doc_cd = request.getParameter("main_cd")+request.getParameter("middle_cd")+request.getParameter("sub_cd");
+		dao.modify_menu(doc_cd, request.getParameter("main_cd"), request.getParameter("middle_cd"), request.getParameter("sub_cd"),
+				request.getParameter("main_desc"), request.getParameter("middle_desc"), request.getParameter("sub_desc"), p_doc_cd);
+		
+		return "redirect:menu_view";
+	}
+	
+	@RequestMapping("/modify_user")
+	public String modify_user(Model model) {
+		System.out.println("modify_user()");
+		
+		return "modify_user";
+	}
+	
+	@RequestMapping("/modify_user_content")
+	public String modify_user_content(HttpServletRequest request, Model model) {
+		System.out.println("modify_user_content()");
+		
+		String enr_user_no = request.getParameter("enr_user_no");
+		IDao dao = sqlSession.getMapper(IDao.class);
+		dao.updateUser(request.getParameter("enr_user_position"), request.getParameter("enr_user_group"), 
+	request.getParameter("create_grant"), request.getParameter("update_grant"), request.getParameter("delete_grant"), enr_user_no);
+
+		return "redirect:userList";
+	}
+	
+	@RequestMapping("/delete_menu")
+	public String delete_menu(HttpServletRequest request, Model model) {
+		System.out.println("delete_menu()");
+		String doc_cd = request.getParameter("doc_cd");
+		
+		IDao dao = sqlSession.getMapper(IDao.class);
+		int result = dao.delete_menu(doc_cd);
+
+		return "redirect:menu_view";
 	}
 	
 	@RequestMapping("/userList")
@@ -435,12 +646,32 @@ request.getParameter("file_nm"), timestamp, request.getParameter("enr_user_id"),
 	@RequestMapping("/insertUser")
 	public String insertUser(HttpServletRequest request, Model model) throws Exception {
 		logger.info("insertUser()");
-
+		String pw = request.getParameter("enr_user_pw");
+		AESCryptoUtil aes = new AESCryptoUtil();
+		String crpyt_pw = null;
+		try {
+			crpyt_pw = aes.encrypt(pw);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		IDao dao = sqlSession.getMapper(IDao.class);
 		dao.insertUser(request.getParameter("enr_user_no"), request.getParameter("enr_user_id"), 
-		request.getParameter("enr_user_position"), request.getParameter("enr_user_group"), request.getParameter("enr_user_pw"));
+		request.getParameter("enr_user_position"), request.getParameter("enr_user_group"), crpyt_pw);
 		
-		return "redirect:/list";
+		return "redirect:/login/login";
+	}
+	
+	@RequestMapping("/deleteUser")
+	public String deleteUser(HttpServletRequest request, Model model) throws Exception {
+		logger.info("deleteUser()");
+		
+		String enr_user_no = request.getParameter("enr_user_no");
+		
+		IDao dao = sqlSession.getMapper(IDao.class);
+		dao.deleteUser(enr_user_no);
+
+		return "redirect:userList";
 	}
 	
 	@RequestMapping("/display")

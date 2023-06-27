@@ -18,6 +18,7 @@
 			<td>업무키</td>
 			<td>고객번호</td>
 			<td>고객이름</td>
+			<td>주민등록번호</td>
 			<td>문서코드</td>
 			<td>담당자</td>
 			<td>담당업무코드</td>
@@ -26,13 +27,14 @@
 			<td><input type="text" name="img_key"></td>
 			<td><input type="text" name="cust_no"></td>
 			<td><input type="text" name="cust_nm"></td>
+			<td><input type="text" name="rrn_no"></td>
 			<td><input type="text" name="doc_cd"></td>
 			<td><input type="text" name="enr_user_id"></td>
 			<td><input type="text" name="enr_org_cd"></td>
 		</tr>
 		
 		<tr>
-			<td colspan="5"><input type="submit" value="신규 등록"> &nbsp;&nbsp; 
+			<td colspan="7"><input type="submit" value="신규 등록"> &nbsp;&nbsp; 
 		</tr>
 		</form>
 		</table>

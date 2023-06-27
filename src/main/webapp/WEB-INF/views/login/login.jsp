@@ -12,7 +12,7 @@
 </head>
 <body>
 <!-- login form {s} -->
-<form:form class="form-signin" name="form1" id="form1" role="form" modelAttribute="userVO" action="login/loginCheck.do" method="post">
+<form:form class="form-signin" name="form1" id="form1" role="form" modelAttribute="userVO" action="loginCheck.do" method="post">
 	<div class="text-center mb-4">
 		<h1 class="h3 mb-3 font-weight-normal">Toy</h1>
 	</div>
@@ -26,12 +26,9 @@
 		<form:password path="enr_user_pw" id="enr_user_pw" name="enr_user_pw" class="form-control" placeholder="비밀번호" required="" />
 		<label for="pwd" class="sr-only">비밀번호</label>
 	</div>
-	<button class="button" type="submit">
-	로그인
-	</button>
+	<button class="btn btn-sm btn-primary" type="submit">로그인</button>
+	<button type="button" class="btn btn-sm btn-primary" href="#" onClick="fn_btnSignupClick()">가입</button>
 	<table><tr><td></td></tr></table>
-	<span style="font-size:11pt;">
-	<a href="#" onClick="fn_btnSignupClick()">가입</a>
-	</span>
+	
 </form:form>
 </body></html>

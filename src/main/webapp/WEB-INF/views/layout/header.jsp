@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
 
 <!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -70,10 +71,11 @@
 			</div>
 			
 		<button type="button href="#" onClick="fn_btnuserList()">유저목록</button>
+		<button type="button href="#" onClick="fn_btnmenuview()">분류목록</button>
 		</c:if>
 		<c:choose>
 			<c:when test="${sessionScope.enr_user_no==null}">
-			<a href="${pageContext.request.contextPath}/login">로그인</a></c:when>
+			<a href="${pageContext.request.contextPath}/login/login">로그인</a></c:when>
 			<c:otherwise><a href="${pageContext.request.contextPath}/login/logout.do">로그아웃</a></c:otherwise>
 		</c:choose>
 	</ul>
@@ -97,6 +99,9 @@
 		}
 		function fn_btnuserList(){
 			location.href ="${pageContext.request.contextPath}/userList";
-        	}    
+        }    
+		function fn_btnmenuview(){
+			location.href ="${pageContext.request.contextPath}/menu_view";
+        }  
 	</script>
     
