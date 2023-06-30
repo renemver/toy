@@ -16,15 +16,15 @@
 		<div class="table-responsive">
 	<table class="table table-striped table-sm" width="500" cellpadding="0" cellspacing="0" border="1">
 		<tr>
-<!-- 			<td>엘리먼트id</td>-->
 			<td>업무키</td>
 			<td>고객번호</td>
 			<td>고객이름</td>
+			<td>주민번호</td>
 			<td>문서코드</td>
-<!-- 			<td>파일명</td>-->
-<!-- 			<td>생성일</td>-->
 			<td>담당자</td>
 			<td>담당업무코드</td>
+<c:if test="${sessionScope.update_grant=='Y'}"><td>수정</td></c:if>	
+<c:if test="${sessionScope.delete_grant=='Y'}"><td>삭제</td></c:if>
 		</tr>
 		<c:forEach items="${listDP}" var="dto">
 		<tr>	
@@ -32,15 +32,16 @@
 			<td><a href="content_view?img_key=${dto.img_key}">${dto.img_key}</a></td>
 			<td>${dto.cust_no}</td>
 			<td>${dto.cust_nm}</td>
+			<td>${dto.rrn_no}</td>
 			<td>${dto.doc_cd}</td>
-<!-- 			<td>${dto.file_nm}</td>-->
-<!--			<td>${dto.enr_dtm}</td>-->
 			<td>${dto.enr_user_id}</td>
-			<td>${dto.enr_org_cd}</td>
+			<td>${dto.enr_org_cd}</td>	
+<c:if test="${sessionScope.update_grant=='Y'}"><td><a href="modify_view?img_key=${dto.img_key}">수정 </a></td> </c:if>
+<c:if test="${sessionScope.delete_grant=='Y'}"><td><a href="delete?img_key=${dto.img_key}&doc_cd=${dto.doc_cd}">삭제</a></td> </c:if>	
 		</tr>
 		</c:forEach>
 		<tr>
-			<td colspan="5"><a href="write_view">등록 </a> &nbsp;&nbsp; 
+			<td colspan="6"><a href="write_view">등록 </a> &nbsp;&nbsp; 
 			</td>			
 		</tr>
 		</table>

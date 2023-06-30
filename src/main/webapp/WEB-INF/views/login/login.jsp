@@ -4,6 +4,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+로그인
 <script>
 	function fn_btnSignupClick(){
 		location.href ="${pageContext.request.contextPath}/login/signupForm";
@@ -11,6 +12,9 @@
 	</script>
 </head>
 <body>
+<div class="modal-header"><h5 class="modal-title" id="loginmodallabel">로그인</h5>
+<button type="button" class="close" data-dismiss="modal" aria-labe="Close"><span aria-hidden="true">&times;</span></button>
+<div class="modal-body">
 <!-- login form {s} -->
 <form:form class="form-signin" name="form1" id="form1" role="form" modelAttribute="userVO" action="loginCheck.do" method="post">
 	<div class="text-center mb-4">
@@ -26,9 +30,9 @@
 		<form:password path="enr_user_pw" id="enr_user_pw" name="enr_user_pw" class="form-control" placeholder="비밀번호" required="" />
 		<label for="pwd" class="sr-only">비밀번호</label>
 	</div>
-	<button class="btn btn-sm btn-primary" type="submit">로그인</button>
+	<button type="submit" class="btn btn-sm btn-primary" >로그인</button>
 	<button type="button" class="btn btn-sm btn-primary" href="#" onClick="fn_btnSignupClick()">가입</button>
-	<table><tr><td></td></tr></table>
 	
 </form:form>
+</div><div class="modal-footer"></div>
 </body></html>

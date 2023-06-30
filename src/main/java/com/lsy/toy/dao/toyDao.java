@@ -65,7 +65,7 @@ public class toyDao implements IDao{
 	public void modify_LN( String cust_no, String cust_nm, String rrn_no, String doc_cd, 
 			String enr_user_id,	String enr_org_cd, String img_key) {}
 	
-	public ArrayList<toyDto> content_view(String img_key) {return null;}
+	public ArrayList<toyDto> content_view(String img_key, String doc_cd) {return null;}
 
 	public void modify_content(final String file_nm, final Timestamp enr_dtm, final String elementid) {}
 
@@ -82,8 +82,19 @@ public class toyDao implements IDao{
 	public int getBoardListCnt(Search search) {
 		return sqlSession.selectOne("com.lsy.toy.dao.mapper.IDao.getBoardListCnt");
 	}
+
+	public int getCOCnt(Search search) {
+		return sqlSession.selectOne("com.lsy.toy.dao.mapper.IDao.getCOCnt");
+	}
+	public int getDPCnt(Search search) {
+		return sqlSession.selectOne("com.lsy.toy.dao.mapper.IDao.getDPCnt");
+	}
+	public int getLNCnt(Search search) {
+		return sqlSession.selectOne("com.lsy.toy.dao.mapper.IDao.getLNCnt");
+	}
 	
 	public ArrayList<menuDto> menu_view(String img_key) {return null;}
+	public ArrayList<menuDto> getmidmenu(String midmenu){return null;}
 	
 	public void write_menu(String doc_cd, String main_cd, String middle_cd, String sub_cd, 
 			String main_desc, String middle_desc,String sub_desc) {}

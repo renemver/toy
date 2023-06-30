@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -19,6 +20,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +37,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import com.lsy.toy.command.toyCommand;
 import com.lsy.toy.dao.IDao;
 import com.lsy.toy.dao.toyDao;
+import com.lsy.toy.dto.menuDto;
 import com.lsy.toy.dto.toyDto;
 import com.lsy.toy.util.AESCryptoUtil;
 import com.lsy.toy.util.EcmUtil;
@@ -79,6 +82,8 @@ public class toyController {
 	
 	@RequestMapping("/listCO")
 	public String listCO( Model model
+			, @RequestParam(value = "sdate", required = false) String sdate
+            , @RequestParam(value = "edate", required = false) String edate
 			, @RequestParam(required = false, defaultValue = "1") String element
 			, @RequestParam(required = false, defaultValue = "1") int page
 			, @RequestParam(required = false, defaultValue = "1") int range
@@ -86,20 +91,23 @@ public class toyController {
 			, @RequestParam(required = false) String keyword
 			) {
 		System.out.println("listCO()");
-		
 		if(!element.equals("1")) {
 			searchType="doc_cd";
 			keyword="01"+element;
 		}
+		if(sdate==""||sdate==null) {sdate="19000101";}
+		if(edate==""||edate==null) {edate="99991231";}
 		
 		Search search = new Search();
 		search.setSearchType(searchType);
 		search.setKeyword(keyword);
+		search.setSdate(sdate);
+		search.setEdate(edate);
 		
 		IDao dao = sqlSession.getMapper(IDao.class);
 
 		//전체 게시글 개수
-		int listCnt = dao.getBoardListCnt(search);
+		int listCnt = dao.getCOCnt(search);
 		search.pageInfo(page, range, listCnt);
 
 		AESCryptoUtil aes = new AESCryptoUtil();
@@ -114,15 +122,20 @@ public class toyController {
 			}
 			list.get(i).setRrn_no(dec_rrn);
 		}
+		
+		ArrayList<menuDto> mlist = dao.getmidmenu("01");
 
 		model.addAttribute("pagination", search);
 		model.addAttribute("listCO", list);
+		model.addAttribute("menuCO", mlist);
 				
 		return "listCO";
 	}
 	
 	@RequestMapping("/listLN")
 	public String listLN(Model model
+			, @RequestParam(value = "sdate", required = false) String sdate
+            , @RequestParam(value = "edate", required = false) String edate
 			, @RequestParam(required = false, defaultValue = "1") String element
 			, @RequestParam(required = false, defaultValue = "1") int page
 			, @RequestParam(required = false, defaultValue = "1") int range
@@ -135,15 +148,19 @@ public class toyController {
 			searchType="doc_cd";
 			keyword="03"+element;
 		}
+		if(sdate==""||sdate==null) {sdate="19000101";}
+		if(edate==""||edate==null) {edate="99991231";}
 		
 		Search search = new Search();
 		search.setSearchType(searchType);
 		search.setKeyword(keyword);
+		search.setSdate(sdate);
+		search.setEdate(edate);
 		
 		IDao dao = sqlSession.getMapper(IDao.class);
 
 		//전체 게시글 개수
-		int listCnt = dao.getBoardListCnt(search);
+		int listCnt = dao.getLNCnt(search);
 		search.pageInfo(page, range, listCnt);
 		
 		AESCryptoUtil aes = new AESCryptoUtil();
@@ -158,15 +175,20 @@ public class toyController {
 			}
 			list.get(i).setRrn_no(dec_rrn);
 		}
+
+		ArrayList<menuDto> mlist = dao.getmidmenu("03");
 		
 		model.addAttribute("pagination", search);
 		model.addAttribute("listLN", list);
+		model.addAttribute("menuLN", mlist);
 				
 		return "listLN";
 	}
 	
 	@RequestMapping("/listDP")
 	public String listDP(Model model
+			, @RequestParam(value = "sdate", required = false) String sdate
+            , @RequestParam(value = "edate", required = false) String edate
 			, @RequestParam(required = false, defaultValue = "1") String element
 			, @RequestParam(required = false, defaultValue = "1") int page
 			, @RequestParam(required = false, defaultValue = "1") int range
@@ -179,15 +201,19 @@ public class toyController {
 			searchType="doc_cd";
 			keyword="02"+element;
 		}
+		if(sdate==""||sdate==null) {sdate="19000101";}
+		if(edate==""||edate==null) {edate="99991231";}
 		
 		Search search = new Search();
 		search.setSearchType(searchType);
 		search.setKeyword(keyword);
+		search.setSdate(sdate);
+		search.setEdate(edate);
 		
 		IDao dao = sqlSession.getMapper(IDao.class);
 
 		//전체 게시글 개수
-		int listCnt = dao.getBoardListCnt(search);
+		int listCnt = dao.getDPCnt(search);
 		search.pageInfo(page, range, listCnt);
 		
 		AESCryptoUtil aes = new AESCryptoUtil();
@@ -202,9 +228,12 @@ public class toyController {
 			}
 			list.get(i).setRrn_no(dec_rrn);
 		}
+
+		ArrayList<menuDto> mlist = dao.getmidmenu("02");
 		
 		model.addAttribute("pagination", search);
 		model.addAttribute("listDP", list);
+		model.addAttribute("menuDP", mlist);
 				
 		return "listDP";
 	}
@@ -223,7 +252,7 @@ public class toyController {
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 		IDao dao = sqlSession.getMapper(IDao.class);
 		String doccd = request.getParameter("doc_cd").substring(0,2);
-
+		String cd = null;
 		AESCryptoUtil aes = new AESCryptoUtil();
 		String crypt_rrn = null;
 		try {
@@ -231,22 +260,27 @@ public class toyController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
 		if(doccd.equals("01")) {
+			cd="CO";
 			dao.write_CO(request.getParameter("img_key"), request.getParameter("cust_no"), request.getParameter("cust_nm"), 
 			request.getParameter("doc_cd"), timestamp, request.getParameter("enr_user_id"), request.getParameter("enr_org_cd"),
 			"N", crypt_rrn);
 		}
 		else if(doccd.equals("02")) {
+			cd="DP";
 			dao.write_DP(request.getParameter("img_key"), request.getParameter("cust_no"), request.getParameter("cust_nm"), 
 			request.getParameter("doc_cd"), timestamp, request.getParameter("enr_user_id"), request.getParameter("enr_org_cd"), 
 			"N", crypt_rrn );
 		}
 		else if(doccd.equals("03")) {
+			cd="LN";
 			dao.write_LN(request.getParameter("img_key"), request.getParameter("cust_no"), request.getParameter("cust_nm"), 
 			request.getParameter("doc_cd"), timestamp, request.getParameter("enr_user_id"), request.getParameter("enr_org_cd"), 
 			"N", crypt_rrn);
 		}
-		return "redirect:list";
+	    String referer = request.getHeader("Referer");
+	    return "redirect:list"+ cd;
 	}
 
 	@RequestMapping("/write_content")
@@ -257,13 +291,14 @@ public class toyController {
 		String img_key = null;
 		String cust_no = null;
 		String cust_nm = null;
+		String doc_cd = null;
 		String enr_user_id = null;
 		String enr_org_cd = null;
 		String rrn_no = null;
 		int seq_no = 1;
 		
 		for(int i = 0; i<list.size(); i++) {
-			String filepath = "D:/temp";
+			String filepath = "/home/p354056/temp";
 			String fileRealName = list.get(i).getOriginalFilename();
 //			String ext = FilenameUtils.getExtension(list.get(i).getName());
 			filepath = filepath + "/" + UUID.randomUUID().toString() + fileRealName;
@@ -279,7 +314,7 @@ public class toyController {
 			String CC = "TOY_CC";
 			
 			img_key = file.getParameter("img_key");
-			String doc_cd = file.getParameter("doc_cd");
+			doc_cd = file.getParameter("doc_cd");
 			if(doc_cd==null) {
 				doc_cd = request.getParameter("dcd");
 			}
@@ -296,13 +331,9 @@ public class toyController {
 			if(img_key==null) {
 				img_key = request.getParameter("ikey");
 				toyDto dto = new toyDto();
-				if(CC.equals("CO_CC")) {
-					dto = dao.selectCO(img_key);
-				}else if(CC.equals("DP_CC")) {
-					dto = dao.selectDP(img_key);
-				}else if(CC.equals("LN_CC")) {
-					dto = dao.selectLN(img_key);
-				}
+				if(CC.equals("CO_CC")) 		{dto = dao.selectCO(img_key);}
+				else if(CC.equals("DP_CC")) {dto = dao.selectDP(img_key);}
+				else if(CC.equals("LN_CC")) {dto = dao.selectLN(img_key);}
 				
 				cust_no = dto.getCust_no();
 				cust_nm = dto.getCust_nm();
@@ -327,13 +358,21 @@ public class toyController {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
+			if(rrn_no.length()==13) {
+				AESCryptoUtil aes = new AESCryptoUtil();
+				try {
+					String dec_rrn = aes.encrypt(rrn_no);
+					rrn_no = dec_rrn;
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
 			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 			dao.write(elementid, img_key, cust_no, cust_nm, doc_cd, fileRealName, 
 					timestamp, enr_user_id, enr_org_cd, "N" ,rrn_no, seq_no );
 		}
 		 
-		return "redirect:content_view?img_key="+img_key;
+		return "redirect:content_view?img_key="+img_key + "&doc_cd="+doc_cd;
 	}
 	
 	@RequestMapping("/content_view")
@@ -345,7 +384,7 @@ public class toyController {
 		String dec_rrn = null;
 		IDao dao = sqlSession.getMapper(IDao.class);
 		
-		ArrayList<toyDto> list = dao.content_view(request.getParameter("img_key"));
+		ArrayList<toyDto> list = dao.content_view(request.getParameter("img_key"), request.getParameter("doc_cd"));
 		for(int i=0; i<list.size(); i++) {
 			try {
 				dec_rrn = aes.decrypt(list.get(i).getRrn_no());
@@ -367,7 +406,7 @@ public class toyController {
 			HttpServletRequest request, HttpServletResponse response, Model model) {
 		System.out.println("download_content()");
 
-		String filepath = "D:/temp";
+		String filepath = "/home/p354056/temp";
 		String eid = value;
 
 		try {
@@ -473,7 +512,7 @@ public class toyController {
 			HttpServletRequest request, MultipartFile replace_file, Model model) {
 		System.out.println("modify_content()");
 	
-		String filepath = "D:/temp";
+		String filepath = "/home/p354056/temp";
 		String fileRealName = replace_file.getOriginalFilename();
 //		String ext = FilenameUtils.getExtension(list.get(i).getName());
 		filepath = filepath + "/" + UUID.randomUUID().toString() + fileRealName;
@@ -678,7 +717,7 @@ public class toyController {
 	public ResponseEntity<byte[]> getImage(String fileName, HttpServletRequest request){
 		System.out.println("display");
 		
-		String filepath = "D:/temp";
+		String filepath = "/home/p354056/temp";
 		String str[] = request.getParameter("elementid").split("\\?");
 		String eid = str[0];
 		String filenm[] = str[1].split("\\=");

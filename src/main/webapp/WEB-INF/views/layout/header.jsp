@@ -21,64 +21,68 @@
 <!--메뉴바 추가 부분-->
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
 	<ul class="navbar-nav navbar-dark">
+		<div class="modal fade" role="dialog" id="loginmodal" tabindex="-1" aria-labelledby="loginmodallabel" aria-hidden="true">
+<div class="modal-dialog"><div class="modal-content">
+<div class="modal-header">
+
+<h5 class="modal-title" id="loginmodallabel"></h5>
+<div class="modal-body">
+<!-- login form {s} -->
+<form class="form-signin" name="form1" id="form1" role="form" modelAttribute="userVO" action="login/loginCheck.do" method="post">
+	<div class="text-center mb-4">
+		<h1 class="h3 mb-3 font-weight-normal">로그인</h1>
+	</div>
+	
+	<div class="form-label-group">
+		<label for="uid" class="sr-only">사번</label>
+		<input type="text" id="enr_user_no" name="enr_user_no" class="form-control" placeholder="사번" required="" autofocus="" />
+	</div>
+	
+	<div class="form-label-group">
+		<label for="pwd" class="sr-only">비밀번호</label>
+		<input type="password id="enr_user_pw" name="enr_user_pw" class="form-control" placeholder="비밀번호" required="" />
+	</div>
+	<div class="form-label-group">
+	<button type="submit" class="btn btn-dark float-right" >로그인</button>
+	<button type="button" class="btn btn-dark" href="#" onClick="fn_btnSignupClick()">가입</button>
+	</div>
+	
+</form>
+</div><div class="modal-footer">
+<button type="button" class="close" data-dismiss="modal" aria-labe="Close"><span aria-hidden="true">&times;</span></button>
+</div></div></div></div></div>
 		<li class="nav-item dropdown">
 			<a class="nav-link" href="/toy">Toy</a>
 		</li>
 		<c:if test="${sessionScope.enr_user_no!=null}">
 		<!-- 드롭다운 메뉴-->
             <div class="dropdown">
-			  <button class="btn btn-secondary dropdown-toggle" type="button" id="commondrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			  <button class="btn btn-dark float-right" type="button" id="codrop" onClick="common('')" aria-haspopup="true" aria-expanded="false">
 			    공통
 			  </button>
-			  <ul id="common" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-			    <li><a class="dropdown-item" value="001" onClick="common('001')">전표</a></li>
-			    <li><a class="dropdown-item" value="003" onClick="common('003')">증빙서류</a></li>
-			  </ul>
 			</div>
 			
 			<div class="dropdown">
-			  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			  <button class="btn btn-dark float-right" type="button" id="dpdrop" onClick="deposit('')" aria-haspopup="true" aria-expanded="false">
 			     수신
 			  </button>
-			  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-			  		<a class="dropdown-item" value="001" onClick="deposit('001')">거래 신청서</a>
-			    	<a class="dropdown-item" value="002" onClick="deposit('002')">예금잔액증명 의뢰서</a>
-			    	<a class="dropdown-item" value="003" onClick="deposit('003')">위임장</a>
-			    	<a class="dropdown-item" value="004" onClick="deposit('004')">정기예금 월 이자 자동이체 신청서</a>
-			    	<a class="dropdown-item" value="005" onClick="deposit('005')">제신고 및 재발급 신청서</a>
-			    	<a class="dropdown-item" value="006" onClick="deposit('006')">전자금융서비스 이용신청서</a>
-			    	<a class="dropdown-item" value="007" onClick="deposit('007')">상속예금(지급 명의 변경) 의뢰 및 이자소득 귀속동의서</a>
-			    	<a class="dropdown-item" value="008" onClick="deposit('008')">CMS출금이체 신청서</a>
-			    	<a class="dropdown-item" value="009" onClick="deposit('009')">비거주자 판정표</a>
-			    	<a class="dropdown-item" value="010" onClick="deposit('010')">세금우대 적용배재 신청서</a>
-			  </div>
 			</div>
 			
 			<div class="dropdown">
-			  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			  <button class="btn btn-dark float-right" type="button" id="lndrop" onClick="loan('')" aria-haspopup="true" aria-expanded="false">
 			    여신
 			  </button>
-			  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-			    	<a class="dropdown-item" value="001" onClick="loan('001')">대출금 부속서류 명세표</a>
-			    	<a class="dropdown-item" value="002" onClick="loan('002')">심의서</a>
-			    	<a class="dropdown-item" value="003" onClick="loan('003')">심의자료外</a>
-			    	<a class="dropdown-item" value="004" onClick="loan('004')">감정평가서</a>
-			    	<a class="dropdown-item" value="005" onClick="loan('005')">신청서</a>
-			    	<a class="dropdown-item" value="006" onClick="loan('006')">여신거래약정서</a>
-			    	<a class="dropdown-item" value="007" onClick="loan('007')">신용부금 납입계약서</a>
-			    	<a class="dropdown-item" value="008" onClick="loan('008')">추가약정서</a>
-			  </div>
 			</div>
-			
-		<button type="button href="#" onClick="fn_btnuserList()">유저목록</button>
-		<button type="button href="#" onClick="fn_btnmenuview()">분류목록</button>
+	</ul>
+	<button class="btn btn-dark float-right" type="button href="#" onClick="fn_btnuserList()">유저목록</button>
+		<button class="btn btn-dark float-right" type="button href="#" onClick="fn_btnmenuview()">분류목록</button>
 		</c:if>
 		<c:choose>
 			<c:when test="${sessionScope.enr_user_no==null}">
-			<a href="${pageContext.request.contextPath}/login/login">로그인</a></c:when>
-			<c:otherwise><a href="${pageContext.request.contextPath}/login/logout.do">로그아웃</a></c:otherwise>
+			<button type="button" class="btn btn-dark float-right" data-toggle="modal" data-target="#loginmodal">로그인</button>
+			</c:when>
+			<c:otherwise><a class="float-right"href="${pageContext.request.contextPath}/login/logout.do">로그아웃</a></c:otherwise>
 		</c:choose>
-	</ul>
 </nav>
 
 	<script>
@@ -103,5 +107,14 @@
 		function fn_btnmenuview(){
 			location.href ="${pageContext.request.contextPath}/menu_view";
         }  
+		function openloginmodal(){
+	<!--		location.href ="${pageContext.request.contextPath}/login/login";-->
+			$('.modal-content').load("login/login");
+	<!--		$('loginmodal').modal();-->
+	     }    
+
+		function fn_btnSignupClick(){
+			location.href ="${pageContext.request.contextPath}/login/signupForm";
+	     }  
 	</script>
     

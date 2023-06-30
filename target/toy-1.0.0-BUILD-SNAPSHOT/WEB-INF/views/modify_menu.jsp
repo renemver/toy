@@ -14,6 +14,7 @@ String doc_cd = request.getParameter("doc_cd");
 %>
 
 <body>
+	<c:if test="${sessionScope.enr_user_no!=null}">
 	<article>
 		<div class="container">
 		<div class="table-responsive">
@@ -45,5 +46,6 @@ String doc_cd = request.getParameter("doc_cd");
 		</div>
 		</div>
 	</article>
+		</c:if>
 </body>
 </html>

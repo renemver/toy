@@ -11,7 +11,7 @@
 	
 
 	function fn_btnCancel(){
-		location.href ="${pageContext.request.contextPath}/login/login";
+		location.href ="${pageContext.request.contextPath}/";
      }    
 
 </script>
@@ -66,8 +66,8 @@
 			</div>
 		</div>
 		<div style="margin-top:10px">
-			<button type="button" class="btn btn-sm btn-primary" href="insertUser" id="btnSignup">회원가입</button>
-			<button type="button" class="btn btn-sm btn-primary" href="#" onClick="fn_btnCancel()">취소</button>
+			<button type="button" class="btn btn-dark" href="insertUser" id="btnSignup">회원가입</button>
+			<button type="button" class="btn btn-dark" href="#" onClick="fn_btnCancel()">취소</button>
 		</div>
 	</div>
 	

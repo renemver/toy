@@ -32,7 +32,7 @@
 		</tr>
 		
 		<tr>
-			<td colspan="5"><input type="submit" value="신규 등록"> &nbsp;&nbsp; 
+			<td colspan="6"><input type="submit" value="신규 등록"> &nbsp;&nbsp; 
 		</tr>
 		</form>
 		</table>

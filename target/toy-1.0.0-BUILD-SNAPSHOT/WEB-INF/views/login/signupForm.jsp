@@ -11,7 +11,7 @@
 	
 
 	function fn_btnCancel(){
-		location.href ="${pageContext.request.contextPath}/login";
+		location.href ="${pageContext.request.contextPath}/login/login";
      }    
 
 </script>

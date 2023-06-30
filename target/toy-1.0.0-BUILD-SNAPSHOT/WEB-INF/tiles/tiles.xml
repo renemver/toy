@@ -10,12 +10,13 @@
     </definition>
     
     <!-- base -->
-    <definition name="base-layout" template="/WEB-INF/tiles/layouts/base_layout.jsp" preparer="menuPreparer">
-        <put-attribute name="tile_header" value="/WEB-INF/views/layout/header.jsp" />
+    <definition name="base-layout" template="/WEB-INF/tiles/layouts/base_layout.jsp" preparer="com.lsy.toy.util.MenuPreparer">
+        <put-attribute name="tile_header" value="/WEB-INF/tiles/layouts/header.jsp" />
+        <put-attribute name="tile_body" value=""/>
  <!--   <put-attribute name="tile_header" value="/WEB-INF/tiles/layouts/header.jsp" /> --> 
     </definition>
-    <definition name="board/*" extends="base-layout">
-        <put-attribute name="tile_body" value="/WEB-INF/views/board/{1}.jsp" />
+    <definition name="listDP.jsp" extends="base-layout">
+        <put-attribute name="tile_body" value="/WEB-INF/views/{1}.jsp" />
     </definition>
     
 </tiles-definitions>

@@ -9,54 +9,6 @@
 	<title>Board List</title>
 </head>
 <script>
-	$(document).on('click', '#btnSearch', function(e){
-		e.preventDefault();
-		var url = "${getBoardListURL}";
-		url = url + "?searchType=" + $('#searchType').val();
-		url = url + "&keyword=" + $('#keyword').val();
-		console.log(url);
-		location.href = url;
-		
-	});
-		
-	function fn_prev(page, range, rangeSize, searchType, keyword) {
-		
-		var page = ((range - 2) * rangeSize) + 1;
-		var range = range - 1;
-		
-		var url = "${pageContext.request.contextPath}/userList";
-		url = url + "?page=" + page;
-		url = url + "&range=" + range;
-		url = url + "&searchType=" + searchType;
-		url = url + "&keyword=" + keyword;
-		
-		location.href = url;
-	}
-
-	function fn_pagination(page, range, rangeSize, searchType, keyword) {
-		var url = "${pageContext.request.contextPath}/userList";
-		url = url + "?page=" + page;
-		url = url + "&range=" + range;
-		url = url + "&searchType=" + searchType;
-		url = url + "&keyword=" + keyword;
-		console.log(url);
-		location.href = url;
-		
-	}
-	
-	function fn_next(page, range, rangeSize, searchType, keyword) {
-		var page = parseInt((range * rangeSize)) + 1;
-		var range = parseInt(range) + 1;
-		
-		var url = "${pageContext.request.contextPath}/userList";
-		url = url + "?page=" + page;
-		url = url + "&range=" + range;
-		url = url + "&searchType=" + searchType;
-		url = url + "&keyword=" + keyword;
-		
-		location.href = url;
-	}
-	
 </script>
  
 <body>
@@ -84,9 +36,10 @@
 						<th>직책</th>
 						<th>그룹</th>
 						<th>생성권한</th>
-						<th>읽기권한</th>
 						<th>수정권한</th>
 						<th>삭제권한</th>
+<c:if test="${sessionScope.update_grant=='Y'}"><th>수정</th></c:if>
+<c:if test="${sessionScope.delete_grant=='Y'}"><th>삭제</th></c:if>
 					</tr>
 				</thead>
 				<tbody>
@@ -95,63 +48,27 @@
 							<tr><td colspan="5" align="center">데이터가 없습니다.</td></tr>
 						</c:when> 
 						<c:when test="${!empty userList}">
-							<c:forEach var="list" items="${userList}">
+							<c:forEach var="dto" items="${userList}">
 								<tr>
-									<td><c:out value="${list.enr_user_no}"/></td>
-									<td><c:out value="${list.enr_user_id}"/></td>
-									<td><c:out value="${list.enr_user_position}"/></td>
-									<td><c:out value="${list.enr_user_group}"/></td>
-									<td><c:out value="${list.create_grant}"/></td>
-									<td><c:out value="${list.read_grant}"/></td>
-									<td><c:out value="${list.update_grant}"/></td>
-									<td><c:out value="${list.delete_grant}"/></td>
+									<td><c:out value="${dto.enr_user_no}"/></td>
+									<td><c:out value="${dto.enr_user_id}"/></td>
+									<td><c:out value="${dto.enr_user_position}"/></td>
+									<td><c:out value="${dto.enr_user_group}"/></td>
+									<td><c:out value="${dto.create_grant}"/></td>
+									<td><c:out value="${dto.update_grant}"/></td>
+									<td><c:out value="${dto.delete_grant}"/></td>
+	<c:if test="${sessionScope.update_grant=='Y'}"><td><a href="modify_user?enr_user_no=${dto.enr_user_no}">수정 </a></td> </c:if>	
+	<c:if test="${sessionScope.delete_grant=='Y'}"><td><a href="deleteUser?enr_user_no=${dto.enr_user_no}">삭제</a></td> </c:if>	
+			 
 								</tr>
 							</c:forEach>
 						</c:when>
-					</c:choose>
+					</c:choose>					
 				</tbody>
 			</table>
 		</div>
 		<div>
-		<a href="/">홈으로</td>
 		</div>
-		<!-- pagination{s} -->
-		<!-- 
-		<div id="paginationBox">
-			<ul class="pagination">
-				<c:if test="${pagination.prev}">
-					<li class="page-item"><a class="page-link" href="#" onClick="fn_prev('${pagination.page}', '${pagination.range}', '${pagination.rangeSize}', '${pagination.searchType}', '${pagination.keyword}')">Previous</a></li>
-				</c:if>
-				
-				<c:forEach begin="${pagination.startPage}" end="${pagination.endPage}" var="idx">
-					<li class="page-item <c:out value="${pagination.page == idx ? 'active' : ''}"/> "><a class="page-link" href="#" onClick="fn_pagination('${idx}', '${pagination.range}', '${pagination.rangeSize}', '${pagination.searchType}', '${pagination.keyword}' )"> ${idx} </a></li>
-				</c:forEach>
-				
-				<c:if test="${pagination.next}">
-					<li class="page-item"><a class="page-link" href="#" onClick="fn_next('${pagination.page}', '${pagination.range}', '${pagination.rangeSize}', '${pagination.searchType}', '${pagination.keyword}')">Next</a></li>
-				</c:if>
-			</ul>
-		</div>
- -->
-		<!-- pagination{e} -->
-		<!-- search{s} -->
-		<!-- 
-		<div class="form-group row justify-content-center">
-			<div style="padding-right:10px">
-				<select class="form-control form-control-sm" name="searchType" id="searchType">
-					<option value="enr_user_id" <c:if test="${pagination.searchType eq 'enr_user_id'}">selected</c:if> >사번</option>
-					<option value="enr_user_no" <c:if test="${pagination.searchType eq 'enr_user_no'}">selected</c:if>>이름</option>
-				</select>
-			</div>
-			<div style="padding-right:10px">
-				<input type="text" class="form-control form-control-sm" name="keyword" id="keyword" value="${pagination.keyword}">
-			</div>
-			<div>
-				<button class="btn btn-sm btn-primary" name="btnSearch" id="btnSearch">검색</button>
-			</div>
-		</div>
- -->
-		<!-- search{e} -->
 	</div>
 </article>
 </c:if>

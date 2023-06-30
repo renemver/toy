@@ -23,8 +23,8 @@
 			<td>코드</td>
 			<td>소분류</td>
 			<td>코드</td>
-			<td>수정</td>
-			<td>삭제</td>
+<c:if test="${sessionScope.update_grant=='Y'}"><td>수정</td></c:if>
+<c:if test="${sessionScope.delete_grant=='Y'}"><td>삭제</td></c:if>
 		</tr>
 		<c:forEach items="${menu_view}" var="dto">
 			<tr>
@@ -34,8 +34,8 @@
 			    <td><input type="hidden" name="middle_cd" 	value="${dto.middle_cd}">${dto.middle_cd}</td>
 			    <td><input type="hidden" name="sub_desc" 	value="${dto.sub_desc}">${dto.sub_desc}</td> 	
 			    <td><input type="hidden" name="sub_cd" 		value="${dto.sub_cd}">${dto.sub_cd}</td>
-			    <c:if test="${sessionScope.update_grant!='N'}"><td><a href="modify_menu?doc_cd=${dto.doc_cd}">수정 </a></td> </c:if>	
-				<c:if test="${sessionScope.delete_grant!='N'}"><td><a href="delete_menu?doc_cd=${dto.doc_cd}">삭제</a></td> </c:if>	
+			    <c:if test="${sessionScope.update_grant=='Y'}"><td><a href="modify_menu?doc_cd=${dto.doc_cd}">수정 </a></td> </c:if>	
+				<c:if test="${sessionScope.delete_grant=='Y'}"><td><a href="delete_menu?doc_cd=${dto.doc_cd}">삭제</a></td> </c:if>	
 			 </tr>
 		</c:forEach>
 		
@@ -44,7 +44,7 @@
 		</tr>
 		<table class="table table-striped table-sm" width="500" cellpadding="0" cellspacing="0" border="1">
 		<tr>
-			<c:if test="${sessionScope.create_grant!='N'}"><td>
+			<c:if test="${sessionScope.create_grant=='Y'}"><td>
 			<a href="write_menu">분류등록 </a></td> </c:if> 
 			</tr></table>
 		</form>

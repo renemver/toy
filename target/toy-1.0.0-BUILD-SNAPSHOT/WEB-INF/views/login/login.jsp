@@ -12,7 +12,7 @@
 </head>
 <body>
 <!-- login form {s} -->
-<form:form class="form-signin" name="form1" id="form1" role="form" modelAttribute="userVO" action="login/loginCheck.do" method="post">
+<form:form class="form-signin" name="form1" id="form1" role="form" modelAttribute="userVO" action="loginCheck.do" method="post">
 	<div class="text-center mb-4">
 		<h1 class="h3 mb-3 font-weight-normal">Toy</h1>
 	</div>

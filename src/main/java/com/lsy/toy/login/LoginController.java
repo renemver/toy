@@ -38,7 +38,7 @@ public class LoginController {
 		return "login/signupForm";
 	}
 	
-	@RequestMapping("/loginCheck.do")
+	@RequestMapping(value={"/loginCheck.do", "/login/loginCheck.do"})
 	public ModelAndView loginCheck(UserVO vo, HttpServletRequest request, HttpSession session ) {
 		System.out.println("loginCheck.do()");
 		

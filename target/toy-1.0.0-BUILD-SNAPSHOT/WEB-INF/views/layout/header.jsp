@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
 
 <!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -30,10 +31,8 @@
 			    공통
 			  </button>
 			  <ul id="common" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-			  	<tiles:importAttribute name="menuList"/>
-				<c:forEach items="${menuList}" var="dto">
-			    <li><a class="dropdown-item" value="001" onClick="common()">test</a></li>
-			    </c:forEach>
+			    <li><a class="dropdown-item" value="001" onClick="common('001')">전표</a></li>
+			    <li><a class="dropdown-item" value="003" onClick="common('003')">증빙서류</a></li>
 			  </ul>
 			</div>
 			
@@ -76,7 +75,7 @@
 		</c:if>
 		<c:choose>
 			<c:when test="${sessionScope.enr_user_no==null}">
-			<a href="${pageContext.request.contextPath}/login">로그인</a></c:when>
+			<a href="${pageContext.request.contextPath}/login/login">로그인</a></c:when>
 			<c:otherwise><a href="${pageContext.request.contextPath}/login/logout.do">로그아웃</a></c:otherwise>
 		</c:choose>
 	</ul>

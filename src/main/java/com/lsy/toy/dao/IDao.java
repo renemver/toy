@@ -42,7 +42,7 @@ public interface IDao {
 	public void modify_LN(String cust_no, String cust_nm, String rrn_no, String doc_cd, 
 			String enr_user_id,	String enr_org_cd, String img_key);
 	
-	public ArrayList<toyDto> content_view(String img_key);
+	public ArrayList<toyDto> content_view(String img_key, String doc_cd);
 	
 	public void modify_content(String file_nm, Timestamp enr_dtm, String elementid);
 	
@@ -57,8 +57,12 @@ public interface IDao {
 	public void deleteimgkey_LN(String img_key);
 
 	public int getBoardListCnt(Search search);
-
+	public int getCOCnt(Search search) ;
+	public int getDPCnt(Search search) ;
+	public int getLNCnt(Search search) ;
+	
 	public ArrayList<menuDto> menu_view(String img_key);
+	public ArrayList<menuDto> getmidmenu(String midmenu);
 
 	public List<UserVO> getUserList(Search search);
 	public UserVO getUserInfo(String enr_user_id);

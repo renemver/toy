@@ -25,64 +25,66 @@
 	<select id="listCO" resultType="com.lsy.toy.dto.toyDto">
 		select img_key, cust_no, cust_nm, doc_cd, enr_user_id, enr_org_cd, rrn_no from 
 		(
-		select row_number() over (order by img_key) NUM, A.* from B354056.TOY_COMMON_TB A 
+		select row_number() over (order by img_key) NUM, A.* from B354056.TOY_COMMON_TB A WHERE enr_dtm BETWEEN #{sdate} and #{edate} 
 		<if test="keyword != null and keyword != '' ">
 			<if test="searchType=='img_key'">
-				WHERE img_key like #{keyword} || '%' AND ENR_DTM >= TO_CHAR(SYSDATE-90, 'YYYYMMDD')
+				AND img_key like #{keyword} || '%' <!--AND ENR_DTM >= TO_CHAR(SYSDATE-90, 'YYYYMMDD')  -->
 			</if>
 			<if test="searchType=='doc_cd'">
-				WHERE  doc_cd like #{keyword} || '%' AND ENR_DTM >= TO_CHAR(SYSDATE-90, 'YYYYMMDD')
+				AND doc_cd like #{keyword} || '%' <!--AND ENR_DTM >= TO_CHAR(SYSDATE-90, 'YYYYMMDD')  -->
 			</if>
 		</if>
 		) 
-		where NUM BETWEEN #{startList}+1 and #{startList}+1+#{listSize}-1
+		WHERE NUM BETWEEN #{startList}+1 and #{startList}+1+#{listSize}-1
 		group by img_key, cust_no, cust_nm, doc_cd, enr_user_id, enr_org_cd, rrn_no order by img_key
 	</select>
 	<select id="listLN" resultType="com.lsy.toy.dto.toyDto">
 		select img_key, cust_no, cust_nm, doc_cd, enr_user_id, enr_org_cd, rrn_no from 
 		(
-		select row_number() over (order by img_key) NUM, A.* from B354056.TOY_LOAN_TB A 
+		select row_number() over (order by img_key) NUM, A.* from B354056.TOY_LOAN_TB A WHERE enr_dtm BETWEEN #{sdate} and #{edate} 
 		<if test="keyword != null and keyword != '' ">
 			<if test="searchType=='img_key'">
-				WHERE img_key like #{keyword} || '%' AND ENR_DTM >= TO_CHAR(SYSDATE-90, 'YYYYMMDD')
+				AND img_key like #{keyword} || '%' <!--AND ENR_DTM >= TO_CHAR(SYSDATE-90, 'YYYYMMDD')  -->
 			</if>
 			<if test="searchType=='doc_cd'">
-				WHERE  doc_cd like #{keyword} || '%' AND ENR_DTM >= TO_CHAR(SYSDATE-90, 'YYYYMMDD')
+				AND doc_cd like #{keyword} || '%' <!--AND ENR_DTM >= TO_CHAR(SYSDATE-90, 'YYYYMMDD')  -->
 			</if>
 		</if>
 		) 
-		where NUM BETWEEN #{startList}+1 and #{startList}+1+#{listSize}-1
+		WHERE NUM BETWEEN #{startList}+1 and #{startList}+1+#{listSize}-1
 		group by img_key, cust_no, cust_nm, doc_cd, enr_user_id, enr_org_cd, rrn_no order by img_key
 	</select>
 	<select id="listDP" resultType="com.lsy.toy.dto.toyDto">
 		select img_key, cust_no, cust_nm, doc_cd, enr_user_id, enr_org_cd, rrn_no from 
 		(
-		select row_number() over (order by img_key) NUM, A.* from B354056.TOY_DEPOSIT_TB A 
+		select row_number() over (order by img_key) NUM, A.* from B354056.TOY_DEPOSIT_TB A WHERE enr_dtm BETWEEN #{sdate} and #{edate} 
 		<if test="keyword != null and keyword != '' ">
 			<if test="searchType=='img_key'">
-				WHERE img_key like #{keyword} || '%' AND ENR_DTM >= TO_CHAR(SYSDATE-90, 'YYYYMMDD')
+				AND img_key like #{keyword} || '%' <!--AND ENR_DTM >= TO_CHAR(SYSDATE-90, 'YYYYMMDD')  -->
 			</if>
 			<if test="searchType=='doc_cd'">
-				WHERE  doc_cd like #{keyword} || '%' AND ENR_DTM >= TO_CHAR(SYSDATE-90, 'YYYYMMDD')
+				AND doc_cd like #{keyword} || '%' <!--AND ENR_DTM >= TO_CHAR(SYSDATE-90, 'YYYYMMDD')  -->
 			</if>
 		</if>
 		) 
-		where NUM BETWEEN #{startList}+1 and #{startList}+1+#{listSize}-1
+		WHERE NUM BETWEEN #{startList}+1 and #{startList}+1+#{listSize}-1
 		group by img_key, cust_no, cust_nm, doc_cd, enr_user_id, enr_org_cd, rrn_no order by img_key
 	</select>
 	
 	<select id="selectCO" resultType="com.lsy.toy.dto.toyDto">
 		select cust_no, cust_nm, enr_user_id, enr_org_cd, rrn_no from B354056.TOY_COMMON_TB where img_key = #{param1}
 	</select>
+	
 	<select id="selectDP" resultType="com.lsy.toy.dto.toyDto">
 		select cust_no, cust_nm, enr_user_id, enr_org_cd, rrn_no from B354056.TOY_DEPOSIT_TB where img_key = #{param1}
 	</select>
+	
 	<select id="selectLN" resultType="com.lsy.toy.dto.toyDto">
 		select cust_no, cust_nm, enr_user_id, enr_org_cd, rrn_no from B354056.TOY_LOAN_TB where img_key = #{param1}
 	</select>
 	
 	<select id="content_view" resultType="com.lsy.toy.dto.toyDto">
-		select * from B354056.TOY_BIZ_INFO where img_key = #{param1}
+		select * from B354056.TOY_BIZ_INFO where img_key = #{param1} and doc_cd = #{param2} order by seq_no
 	</select>
 	
 	<insert id="write">
@@ -150,26 +152,59 @@
 	</update>
 	
 	<select id="getBoardListCnt" resultType="int">
-		SELECT
-			count(*) as listCnt
-		FROM
-			B354056.TOY_BIZ_INFO
-		<trim prefix="WHERE" prefixOverrides="AND|OR">
+		SELECT count(*) as listCnt FROM
+			B354056.TOY_BIZ_INFO WHERE enr_dtm BETWEEN #{sdate} and #{edate}
 		<if test="keyword != null and keyword != '' ">
 			<if test="searchType=='img_key'">
-				AND img_key like #{keyword} || '%'
+				AND img_key like #{keyword} || '%' 
 			</if>
 			<if test="searchType=='doc_cd'">
-				AND doc_cd like #{keyword} || '%'
+				AND doc_cd like #{keyword} || '%' 
 			</if>
 		</if>
-		</trim>
+	</select>
+	<select id="getCOCnt" resultType="int">
+		SELECT count(*) as listCnt FROM
+			B354056.TOY_COMMON_TB WHERE enr_dtm BETWEEN #{sdate} and #{edate}
+		<if test="keyword != null and keyword != '' ">
+			<if test="searchType=='img_key'">
+				AND img_key like #{keyword} || '%' 
+			</if>
+			<if test="searchType=='doc_cd'">
+				AND doc_cd like #{keyword} || '%' 
+			</if>
+		</if>
+	</select>
+	<select id="getDPCnt" resultType="int">
+		SELECT count(*) as listCnt FROM
+			B354056.TOY_DEPOSIT_TB WHERE enr_dtm BETWEEN #{sdate} and #{edate}
+		<if test="keyword != null and keyword != '' ">
+			<if test="searchType=='img_key'">
+				AND img_key like #{keyword} || '%' 
+			</if>
+			<if test="searchType=='doc_cd'">
+				AND doc_cd like #{keyword} || '%' 
+			</if>
+		</if>
+	</select>
+	<select id="getLNCnt" resultType="int">
+		SELECT count(*) as listCnt FROM
+			B354056.TOY_LOAN_TB WHERE enr_dtm BETWEEN #{sdate} and #{edate}
+		<if test="keyword != null and keyword != '' ">
+			<if test="searchType=='img_key'">
+				AND img_key like #{keyword} || '%' 
+			</if>
+			<if test="searchType=='doc_cd'">
+				AND doc_cd like #{keyword} || '%' 
+			</if>
+		</if>
 	</select>
 	
-
-	<!--  -->
 	<select id="menu_view" resultType="com.lsy.toy.dto.menuDto">
 		select * from B354056.TOY_CODE_TB ORDER BY MAIN_CD, MIDDLE_CD, SUB_CD
+	</select>
+	<select id="getmidmenu" resultType="com.lsy.toy.dto.menuDto">
+		select MIDDLE_CD, MIDDLE_DESC from B354056.TOY_CODE_TB WHERE doc_cd like #{midmenu} || '%' GROUP BY MIDDLE_CD, MIDDLE_DESC ORDER BY MIDDLE_CD
 	</select>
 	
 	<insert id="write_menu">
