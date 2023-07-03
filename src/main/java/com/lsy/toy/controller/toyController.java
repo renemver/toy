@@ -279,7 +279,6 @@ public class toyController {
 			request.getParameter("doc_cd"), timestamp, request.getParameter("enr_user_id"), request.getParameter("enr_org_cd"), 
 			"N", crypt_rrn);
 		}
-	    String referer = request.getHeader("Referer");
 	    return "redirect:list"+ cd;
 	}
 
@@ -406,6 +405,7 @@ public class toyController {
 			HttpServletRequest request, HttpServletResponse response, Model model) {
 		System.out.println("download_content()");
 
+		String refer = request.getHeader("Referer");
 		String filepath = "/home/p354056/temp";
 		String eid = value;
 
@@ -462,8 +462,8 @@ public class toyController {
                 e.printStackTrace();
             }
         }
-		
-		return "redirect:content_view?img_key="+img_key;
+
+		return "redirect:"+refer;
 	}
 	
 	@RequestMapping(method=RequestMethod.POST, value="/modify")
@@ -471,9 +471,12 @@ public class toyController {
 		System.out.println("modify()");
 
 		String img_key = request.getParameter("img_key");
-		String doccd = request.getParameter("doc_cd").substring(0,2);
+		String p_doc_cd = request.getParameter("p_doc_cd");
+		String doc_cd = request.getParameter("doc_cd");
+		String doccd = doc_cd.substring(0,2);
 		AESCryptoUtil aes = new AESCryptoUtil();
 		String crypt_rrn = null;
+		String cd = null;
 		try {
 			crypt_rrn = aes.encrypt(request.getParameter("rrn_no"));
 		} catch (Exception e) {
@@ -481,23 +484,30 @@ public class toyController {
 		}
 
 		IDao dao = sqlSession.getMapper(IDao.class);
-		dao.modify(request.getParameter("cust_no"), request.getParameter("cust_nm"), request.getParameter("doc_cd"), 
-				request.getParameter("enr_user_id"), request.getParameter("enr_org_cd"), crypt_rrn, img_key);	
+		dao.modify(request.getParameter("cust_no"), request.getParameter("cust_nm"), crypt_rrn, request.getParameter("doc_cd"), 
+				request.getParameter("enr_user_id"), request.getParameter("enr_org_cd"), img_key, p_doc_cd);	
 
 		if(doccd.equals("01")) {
+			cd = "CO";
 			dao.modify_CO( request.getParameter("cust_no"), request.getParameter("cust_nm"), crypt_rrn,
-			request.getParameter("doc_cd"), request.getParameter("enr_user_id"), request.getParameter("enr_org_cd") , img_key );
+			request.getParameter("doc_cd"), request.getParameter("enr_user_id"), 
+			request.getParameter("enr_org_cd") , img_key, p_doc_cd );
 		}
 		else if(doccd.equals("02")) {
+			cd = "DP";
 			dao.modify_DP( request.getParameter("cust_no"), request.getParameter("cust_nm"), crypt_rrn,
-			request.getParameter("doc_cd"), request.getParameter("enr_user_id"), request.getParameter("enr_org_cd") , img_key );
+			request.getParameter("doc_cd"), request.getParameter("enr_user_id"), 
+			request.getParameter("enr_org_cd") , img_key, p_doc_cd );
 		}
 		else if(doccd.equals("03")) {
+			cd = "LN";
 			dao.modify_LN( request.getParameter("cust_no"), request.getParameter("cust_nm"), crypt_rrn,
-			request.getParameter("doc_cd"), request.getParameter("enr_user_id"), request.getParameter("enr_org_cd") , img_key );
+			request.getParameter("doc_cd"), request.getParameter("enr_user_id"), 
+			request.getParameter("enr_org_cd") , img_key, p_doc_cd);
 		}
 		
-		return "redirect:content_view?img_key="+img_key;
+
+	    return "redirect:list"+ cd;
 	}
 	
 	@RequestMapping("/modify_view")
@@ -511,7 +521,8 @@ public class toyController {
 	public String modify_content(@RequestParam(value="checkbox", required=false)String value,
 			HttpServletRequest request, MultipartFile replace_file, Model model) {
 		System.out.println("modify_content()");
-	
+
+		String refer = request.getHeader("Referer");
 		String filepath = "/home/p354056/temp";
 		String fileRealName = replace_file.getOriginalFilename();
 //		String ext = FilenameUtils.getExtension(list.get(i).getName());
@@ -535,7 +546,7 @@ public class toyController {
 		IDao dao = sqlSession.getMapper(IDao.class);
 		dao.modify_content(fileRealName, timestamp, elementid);
 
-		return "redirect:content_view?img_key="+img_key;
+		return "redirect:"+refer;
 	}
 	
 	@RequestMapping("/delete")
@@ -547,13 +558,13 @@ public class toyController {
 		String refer = request.getHeader("Referer");
 		IDao dao = sqlSession.getMapper(IDao.class);
 
-		dao.deleteimgkey(img_key);
+		dao.deleteimgkey(img_key, doc_cd);
 		if(chk.equals("01")) {
-			dao.deleteimgkey_CO(img_key);}
+			dao.deleteimgkey_CO(img_key,doc_cd);}
 		else if(chk.equals("02")) {
-			dao.deleteimgkey_DP(img_key);	}
+			dao.deleteimgkey_DP(img_key,doc_cd);}
 		else if(chk.equals("03")) {
-			dao.deleteimgkey_LN(img_key);
+			dao.deleteimgkey_LN(img_key,doc_cd);
 		}
 		
 		return "redirect:"+refer;
@@ -566,19 +577,23 @@ public class toyController {
 		String img_key = request.getParameter("img_key");
 		String doc_cd = request.getParameter("doc_cd");
 		String chk = doc_cd.substring(0,2);
+		String refer = request.getHeader("Referer");
 		
 		IDao dao = sqlSession.getMapper(IDao.class);
 		dao.deleteeid(value);
-		if(chk.equals("01")) {
-			dao.deleteeid_CO(img_key, doc_cd);}
-		else if(chk.equals("02")) {
-			dao.deleteeid_DP(img_key, doc_cd);}
-		else if(chk.equals("03")) {
-			dao.deleteeid_LN(img_key, doc_cd);
-		}
 		
+		int delcnt = dao.sel_delcnt(img_key, doc_cd);
+		if(delcnt==0) {
+			if(chk.equals("01")) {
+				dao.deleteimgkey_CO(img_key, doc_cd);}
+			else if(chk.equals("02")) {
+				dao.deleteimgkey_DP(img_key, doc_cd);}
+			else if(chk.equals("03")) {
+				dao.deleteimgkey_LN(img_key, doc_cd);
+			}
+		}
 
-		return "redirect:content_view?img_key="+img_key;
+		return "redirect:"+refer;
 	}
 	
 	@RequestMapping("/menu_view")
@@ -698,7 +713,7 @@ public class toyController {
 		dao.insertUser(request.getParameter("enr_user_no"), request.getParameter("enr_user_id"), 
 		request.getParameter("enr_user_position"), request.getParameter("enr_user_group"), crpyt_pw);
 		
-		return "redirect:/login/login";
+		return "redirect:/";
 	}
 	
 	@RequestMapping("/deleteUser")

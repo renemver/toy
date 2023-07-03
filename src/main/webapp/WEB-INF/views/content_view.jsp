@@ -9,6 +9,33 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>content view</title>
 </head>
+<script>
+				function checkOnlyOne(element) { 
+				  const checkboxes = document.getElementsByName("checkbox");
+				  
+				  checkboxes.forEach((checkbox) =>{
+					  checkbox.checked = false;
+				  })
+				  
+				  element.checked = true;
+				}
+				function submit2(frm) { 
+			    	frm.action='modify_content'; 
+			    	frm.enctype="multipart/form-data";
+			    	frm.submit(); 
+			    	return true; 
+				} 
+				function submit3(frm) { 
+			    	frm.action='delete_content'; 
+			    	frm.submit(); 
+			    	return true; 
+				} 
+				function submit4(frm) { 
+			    	frm.action='download_content'; 
+			    	frm.submit(); 
+			    	return true; 
+				} 
+			</script>
 <%
 request.setCharacterEncoding("UTF-8"); 
 String ikey = request.getParameter("img_key");
@@ -19,8 +46,8 @@ String dcd = request.getParameter("doc_cd");
 <article>
 		<div class="container">
 		<div class="table-responsive">
-	<table class="table table-striped table-sm" border="1">
 		<form method="post" action="write_content" enctype="multipart/form-data">
+	<table class="table table-striped table-sm" border="1">
 		<tr>
 			<td></td>
 			<td>No</td>
@@ -55,54 +82,25 @@ String dcd = request.getParameter("doc_cd");
 			    <td style="word-break:break-all"><a href="display?elementid=${dto.elementid}?file_nm=${dto.file_nm}">보기</a></td>		    		
 			 </tr>
 		</c:forEach>
-		
-		<tr>
-			<script>
-				function checkOnlyOne(element) { 
-				  const checkboxes = document.getElementsByName("checkbox");
-				  
-				  checkboxes.forEach((checkbox) =>{
-					  checkbox.checked = false;
-				  })
-				  
-				  element.checked = true;
-				}
-				function submit2(frm) { 
-			    	frm.action='modify_content'; 
-			    	frm.enctype="multipart/form-data";
-			    	frm.submit(); 
-			    	return true; 
-				} 
-				function submit3(frm) { 
-			    	frm.action='delete_content'; 
-			    	frm.submit(); 
-			    	return true; 
-				} 
-				function submit4(frm) { 
-			    	frm.action='download_content'; 
-			    	frm.submit(); 
-			    	return true; 
-				} 
-			</script>
-		</tr>
+		</table>
+		<div>
 		<table class="table table-striped table-sm" width="500" cellpadding="0" cellspacing="0" border="1">
-		<tr>
-			<td style="word-break:break-all"><c:if test="${sessionScope.create_grant=='Y'}">등록 파일 선택 : <input type="file" multiple="multiple" name="file"
+			<c:if test="${sessionScope.create_grant=='Y'}"><td>등록 파일 선택 : <input type="file" multiple="multiple" name="file"
 			accept=".hwp, .doc, .docx, .ppt, .pptx, .xls, .xlsx, .tif, .jpg, .png, .bmp, .pdf">
 			<input type="hidden" name="ikey" value="<%=ikey%>">
 			<input type="hidden" name="dcd" value="<%=dcd%>">
-			<input type="submit" value="이미지등록" ></c:if> </td> 
+			<input type="submit" value="이미지등록" ></td></c:if> 
 			
-			<td style="word-break:break-all"><c:if test="${sessionScope.update_grant=='Y'}">변경 파일 선택 : <input type="file" name="replace_file" 
+			<c:if test="${sessionScope.update_grant=='Y'}"><td>변경 파일 선택 : <input type="file" name="replace_file" 
 			accept=".hwp, .doc, .docx, .ppt, .pptx, .xls, .xlsx, .tif, .jpg, .png, .bmp, .pdf">
-			<input type="submit" value="이미지변경" onclick='return submit2(this.form);'> </c:if></td> 
-			
-			<td style="word-break:break-all"><c:if test="${sessionScope.delete_grant=='Y'}">
-			<input type="submit" value="삭제" onclick='return submit3(this.form);'></c:if></td>
-			<td style="word-break:break-all"><input type="submit" value="다운로드" onclick='return submit4(this.form);'></td>
-			</tr></table>
+			<input type="submit" value="이미지변경" onclick='return submit2(this.form);'></td> </c:if> 
+		</div>
+		<div>
+			<c:if test="${sessionScope.delete_grant=='Y'}">
+			<input type="submit" value="다운로드" onclick='return submit4(this.form);'>
+			<input type="submit" value="삭제" class="float-right" onclick='return submit3(this.form);'></c:if>
+		</div>
 		</form>
-		</table>
 		</div>
 		</div>
 	</article>

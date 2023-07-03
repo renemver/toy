@@ -23,7 +23,7 @@
 	</select>
 	
 	<select id="listCO" resultType="com.lsy.toy.dto.toyDto">
-		select img_key, cust_no, cust_nm, doc_cd, enr_user_id, enr_org_cd, rrn_no from 
+		select img_key, cust_no, cust_nm, doc_cd, del_yn, enr_user_id, enr_org_cd, rrn_no from 
 		(
 		select row_number() over (order by img_key) NUM, A.* from B354056.TOY_COMMON_TB A WHERE enr_dtm BETWEEN #{sdate} and #{edate} 
 		<if test="keyword != null and keyword != '' ">
@@ -36,10 +36,10 @@
 		</if>
 		) 
 		WHERE NUM BETWEEN #{startList}+1 and #{startList}+1+#{listSize}-1
-		group by img_key, cust_no, cust_nm, doc_cd, enr_user_id, enr_org_cd, rrn_no order by img_key
+		group by img_key, cust_no, cust_nm, doc_cd, del_yn, enr_user_id, enr_org_cd, rrn_no order by img_key, doc_cd
 	</select>
 	<select id="listLN" resultType="com.lsy.toy.dto.toyDto">
-		select img_key, cust_no, cust_nm, doc_cd, enr_user_id, enr_org_cd, rrn_no from 
+		select img_key, cust_no, cust_nm, doc_cd, del_yn, enr_user_id, enr_org_cd, rrn_no from 
 		(
 		select row_number() over (order by img_key) NUM, A.* from B354056.TOY_LOAN_TB A WHERE enr_dtm BETWEEN #{sdate} and #{edate} 
 		<if test="keyword != null and keyword != '' ">
@@ -52,10 +52,10 @@
 		</if>
 		) 
 		WHERE NUM BETWEEN #{startList}+1 and #{startList}+1+#{listSize}-1
-		group by img_key, cust_no, cust_nm, doc_cd, enr_user_id, enr_org_cd, rrn_no order by img_key
+		group by img_key, cust_no, cust_nm, doc_cd, del_yn, enr_user_id, enr_org_cd, rrn_no order by img_key, doc_cd
 	</select>
 	<select id="listDP" resultType="com.lsy.toy.dto.toyDto">
-		select img_key, cust_no, cust_nm, doc_cd, enr_user_id, enr_org_cd, rrn_no from 
+		select img_key, cust_no, cust_nm, doc_cd, del_yn, enr_user_id, enr_org_cd, rrn_no from 
 		(
 		select row_number() over (order by img_key) NUM, A.* from B354056.TOY_DEPOSIT_TB A WHERE enr_dtm BETWEEN #{sdate} and #{edate} 
 		<if test="keyword != null and keyword != '' ">
@@ -68,7 +68,7 @@
 		</if>
 		) 
 		WHERE NUM BETWEEN #{startList}+1 and #{startList}+1+#{listSize}-1
-		group by img_key, cust_no, cust_nm, doc_cd, enr_user_id, enr_org_cd, rrn_no order by img_key
+		group by img_key, cust_no, cust_nm, doc_cd, del_yn, enr_user_id, enr_org_cd, rrn_no order by img_key, doc_cd
 	</select>
 	
 	<select id="selectCO" resultType="com.lsy.toy.dto.toyDto">
@@ -106,20 +106,20 @@
 	</insert>
 	
 	<update id="modify">
-		UPDATE B354056.TOY_BIZ_INFO set cust_no = #{param1}, cust_nm = #{param2}, doc_cd = #{param3}, 
-		 enr_user_id = #{param4}, enr_org_cd = #{param5}, rrn_no = #{param6} where img_key = #{param7}
+		UPDATE B354056.TOY_BIZ_INFO set cust_no = #{param1}, cust_nm = #{param2}, rrn_no=#{param3}, doc_cd = #{param4}, 
+		enr_user_id = #{param5}, enr_org_cd = #{param6} where img_key = #{param7} AND DOC_CD = #{param8}
 	</update>
 	<update id="modify_CO">
 		UPDATE B354056.TOY_COMMON_TB set cust_no=#{param1}, cust_nm=#{param2}, rrn_no=#{param3},
-		doc_cd=#{param4},enr_user_id=#{param5},enr_org_cd=#{param6} WHERE IMG_KEY=#{param7}
+		doc_cd=#{param4},enr_user_id=#{param5},enr_org_cd=#{param6} WHERE IMG_KEY=#{param7} AND DOC_CD = #{param8}
 	</update>
 	<update id="modify_DP">
 		UPDATE B354056.TOY_DEPOSIT_TB set cust_no=#{param1}, cust_nm=#{param2}, rrn_no=#{param3},
-		doc_cd=#{param4},enr_user_id=#{param5},enr_org_cd=#{param6} WHERE IMG_KEY=#{param7}
+		doc_cd=#{param4},enr_user_id=#{param5},enr_org_cd=#{param6} WHERE IMG_KEY=#{param7} AND DOC_CD = #{param8}
 	</update>
 	<update id="modify_LN">
 		UPDATE B354056.TOY_LOAN_TB set cust_no=#{param1}, cust_nm=#{param2}, rrn_no=#{param3},
-		doc_cd=#{param4},enr_user_id=#{param5},enr_org_cd=#{param6} WHERE IMG_KEY=#{param7}
+		doc_cd=#{param4},enr_user_id=#{param5},enr_org_cd=#{param6} WHERE IMG_KEY=#{param7} AND DOC_CD = #{param8}
 	</update>
 	 
 	<update id="modify_content">
@@ -129,26 +129,21 @@
 		UPDATE B354056.TOY_BIZ_INFO SET del_yn = 'Y' where elementid = #{param1}
 	</update>
 	<update id="deleteimgkey">
-		UPDATE B354056.TOY_BIZ_INFO SET del_yn = 'Y' where img_key = #{param1}
+		UPDATE B354056.TOY_BIZ_INFO SET del_yn = 'Y' where img_key = #{param1} and doc_cd = #{param2}
 	</update>
 	
-	<update id="deleteeid_CO">
+	<select id="sel_delcnt" resultType="int">
+		SELECT COUNT(*) FROM B354056.TOY_BIZ_INFO WHERE IMG_KEY = #{img_key} AND DOC_CD = #{doc_cd} AND DEL_YN != 'Y'
+	</select>
+	
+	<update id="deleteimgkey_CO">
 		UPDATE B354056.TOY_COMMON_TB SET del_yn = 'Y' where IMG_KEY = #{param1} AND DOC_CD = #{param2}
 	</update>
-	<update id="deleteimgkey_CO">
-		UPDATE B354056.TOY_COMMON_TB SET del_yn = 'Y' where IMG_KEY = #{param1}
-	</update>
-	<update id="deleteeid_DP">
+	<update id="deleteimgkey_DP">
 		UPDATE B354056.TOY_DEPOSIT_TB SET del_yn = 'Y' where IMG_KEY = #{param1} AND DOC_CD = #{param2}
 	</update>
-	<update id="deleteimgkey_DP">
-		UPDATE B354056.TOY_DEPOSIT_TB SET del_yn = 'Y' where IMG_KEY = #{param1}
-	</update>
-	<update id="deleteeid_LN">
-		UPDATE B354056.TOY_LOAN_TB SET del_yn = 'Y' where IMG_KEY = #{param1} AND DOC_CD = #{param2}
-	</update>
 	<update id="deleteimgkey_LN">
-		UPDATE B354056.TOY_LOAN_TB SET del_yn = 'Y' where IMG_KEY = #{param1}
+		UPDATE B354056.TOY_LOAN_TB SET del_yn = 'Y' where IMG_KEY = #{param1} AND DOC_CD = #{param2}
 	</update>
 	
 	<select id="getBoardListCnt" resultType="int">

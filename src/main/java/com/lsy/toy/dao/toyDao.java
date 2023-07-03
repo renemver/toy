@@ -56,28 +56,25 @@ public class toyDao implements IDao{
 			String enr_user_id, String enr_org_cd, String del_yn, String rrn_no) {}
 	
 
-	public void modify(final String cust_no, final String cust_nm, final String doc_cd, 
-			final String enr_user_id, final String enr_org_cd,final String rrn_no, final String img_key) {}
+	public void modify(final String cust_no, final String cust_nm, final String rrn_no, final String doc_cd, 
+			final String enr_user_id, final String enr_org_cd, final String img_key, final String p_doc_cd) {}
 	public void modify_CO( String cust_no, String cust_nm, String rrn_no, String doc_cd, 
-			String enr_user_id,	String enr_org_cd, String img_key) {}
+			String enr_user_id,	String enr_org_cd, String img_key, String p_doc_cd) {}
 	public void modify_DP( String cust_no, String cust_nm, String rrn_no, String doc_cd, 
-			String enr_user_id,	String enr_org_cd, String img_key) {}
+			String enr_user_id,	String enr_org_cd, String img_key, String p_doc_cd) {}
 	public void modify_LN( String cust_no, String cust_nm, String rrn_no, String doc_cd, 
-			String enr_user_id,	String enr_org_cd, String img_key) {}
+			String enr_user_id,	String enr_org_cd, String img_key, String p_doc_cd) {}
 	
 	public ArrayList<toyDto> content_view(String img_key, String doc_cd) {return null;}
 
 	public void modify_content(final String file_nm, final Timestamp enr_dtm, final String elementid) {}
 
 	public void deleteeid(String elementid) {}
-	public void deleteimgkey(String img_key) {}
+	public void deleteimgkey(String img_key, String doc_cd) {}
 	
-	public void deleteeid_CO(String img_key, String doc_cd) {}
-	public void deleteimgkey_CO(String img_key) {}
-	public void deleteeid_DP(String img_key, String doc_cd) {}
-	public void deleteimgkey_DP(String img_key) {}
-	public void deleteeid_LN(String img_key, String doc_cd) {}
-	public void deleteimgkey_LN(String img_key) {}
+	public void deleteimgkey_CO(String img_key, String doc_cd) {}
+	public void deleteimgkey_DP(String img_key, String doc_cd) {}
+	public void deleteimgkey_LN(String img_key, String doc_cd) {}
 	
 	public int getBoardListCnt(Search search) {
 		return sqlSession.selectOne("com.lsy.toy.dao.mapper.IDao.getBoardListCnt");
@@ -141,6 +138,9 @@ public class toyDao implements IDao{
 	public int getMaxNo(String img_key) {
 		return sqlSession.selectOne("com.lsy.toy.dao.mapper.IDao.getMaxNo", img_key);
 	};
+	public int sel_delcnt(@Param("img_key")String img_key, @Param("doc_cd")String doc_cd) {
+		return sqlSession.selectOne("com.lsy.toy.dao.mapper.IDao.sel_delcnt");
+	}
 }
 
 

@@ -31,6 +31,7 @@
 			<td>고객이름</td>
 			<td>주민번호</td>
 			<td>문서코드</td>
+			<td>삭제</td>
 			<td>담당자</td>
 			<td>담당업무코드</td>
 <c:if test="${sessionScope.update_grant=='Y'}"><td>수정</td></c:if>	
@@ -43,14 +44,15 @@
 			<td>${dto.cust_nm}</td>
 			<td>${dto.rrn_no}</td>
 			<td>${dto.doc_cd}</td>
+			<td>${dto.del_yn}</td>
 			<td>${dto.enr_user_id}</td>
 			<td>${dto.enr_org_cd}</td>
-<c:if test="${sessionScope.update_grant=='Y'}"><td><a href="modify_view?img_key=${dto.img_key}">수정 </a></td> </c:if>
+<c:if test="${sessionScope.update_grant=='Y'}"><td><a href="modify_view?img_key=${dto.img_key}&doc_cd=${dto.doc_cd}">수정 </a></td> </c:if>
 <c:if test="${sessionScope.delete_grant=='Y'}"><td><a href="delete?img_key=${dto.img_key}&doc_cd=${dto.doc_cd}">삭제</a></td> </c:if>	
 		</tr>
 		</c:forEach>
 		<tr>
-			<td colspan="9"><a href="write_view">등록 </a></td>			
+<c:if test="${sessionScope.create_grant=='Y'}"><td colspan="10"><a href="write_view">등록 </a></td></c:if>			
 		</tr>
 		</table>
 		</div>

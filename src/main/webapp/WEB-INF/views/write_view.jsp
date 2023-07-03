@@ -10,34 +10,55 @@
 </head>
 <body>
 	<article>
-		<div class="container">
-		<div class="table-responsive">
-	<table class="table table-striped table-sm" width="700" cellpadding="0" cellspacing="0" border="1">
+		<div class="container  col-md-6" role="main">
+		<div class="card">
+		<div class="card-header">업무 등록</div>
+		<div class="card-body">
 		<form action="write" method="post">
-		<tr>
-			<td>업무키</td>
-			<td>고객번호</td>
-			<td>고객이름</td>
-			<td>주민등록번호</td>
-			<td>문서코드</td>
-			<td>담당자</td>
-			<td>담당업무코드</td>
-			</tr>
-		<tr>
-			<td><input type="text" name="img_key"></td>
-			<td><input type="text" name="cust_no"></td>
-			<td><input type="text" name="cust_nm"></td>
-			<td><input type="text" name="rrn_no"></td>
-			<td><input type="text" name="doc_cd"></td>
-			<td><input type="text" name="enr_user_id"></td>
-			<td><input type="text" name="enr_org_cd"></td>
-		</tr>
-		
-		<tr>
-			<td colspan="7"><input type="submit" value="신규 등록"> &nbsp;&nbsp; 
-		</tr>
+		<div class="form-group row">
+			<label for="img_key" class="col-md-3 col-form-label text-md-right">업무키</label>
+			<div class="col-md-5">
+				<input type="text" name="img_key" id="img_key" class="form-control" placeholder="업무키" />
+			</div>
+		</div>
+		<div class="form-group row">
+			<label for="cust_no" class="col-md-3 col-form-label text-md-right">고객번호</label>
+			<div class="col-md-5">
+				<input type="text" name="cust_no" id="cust_no" class="form-control" placeholder="고객번호" />
+			</div>
+		</div>
+		<div class="form-group row">
+			<label for="cust_nm" class="col-md-3 col-form-label text-md-right">고객이름</label>
+			<div class="col-md-5">
+				<input type="text" name="cust_nm" id="cust_nm" class="form-control" placeholder="고객이름" />
+			</div>
+		</div>
+		<div class="form-group row">
+			<label for="rrn_no" class="col-md-3 col-form-label text-md-right">주민등록번호</label>
+			<div class="col-md-5">
+				<input type="text" name="rrn_no" id="rrn_no" class="form-control" placeholder="주민등록번호" />
+			</div>
+		</div>
+		<div class="form-group row">
+			<label for="doc_cd" class="col-md-3 col-form-label text-md-right">문서코드</label>
+			<div class="col-md-5">
+				<input type="text" name="doc_cd" id="doc_cd" class="form-control" placeholder="문서코드" />
+			</div>
+		</div>
+		<div class="form-group row">
+			<label for="enr_user_id" class="col-md-3 col-form-label text-md-right">담당자</label>
+			<div class="col-md-5">
+				<input type="text" name="enr_user_id" id="enr_user_id" class="form-control" placeholder="담당자" />
+			</div>
+		</div>
+		<div class="form-group row">
+			<label for="enr_org_cd" class="col-md-3 col-form-label text-md-right">담당업무코드</label>
+			<div class="col-md-5">
+				<input type="text" name="enr_org_cd" id="enr_org_cd" class="form-control" placeholder="담당업무코드" />
+			</div>
+		</div>
+		<input type="submit" class="btn btn-dark float-right" value="신규 등록"> 	
 		</form>
-		</table>
 		</div>
 		</div>
 	</article>

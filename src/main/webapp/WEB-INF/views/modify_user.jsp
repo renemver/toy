@@ -16,30 +16,44 @@ String enr_user_no = request.getParameter("enr_user_no");
 <body>
 	<c:if test="${sessionScope.enr_user_no!=null}">
 	<article>
-		<div class="container">
-		<div class="table-responsive">
-	<table class="table table-striped table-sm" width="700" cellpadding="0" cellspacing="0" border="1">
-		<form action="modify_user_content" method="post">
-		<tr>
-			<td>직책</td>
-			<td>조직</td>
-			<td>생성권한</td>
-			<td>수정권한</td>
-			<td>삭제권한</td>
-			</tr>
-		<tr>
-			<input type="hidden" name="enr_user_no" value="<%=enr_user_no%>">
-			<td><input type="text" name="enr_user_position"></td>
-			<td><input type="text" name="enr_user_group"></td>
-			<td><input type="text" name="create_grant"></td>
-			<td><input type="text" name="update_grant"></td>
-			<td><input type="text" name="delete_grant"></td>
-		</tr>
-		<tr>
-			<td colspan="7"><input type="submit" value="수정"> </td>
-		</tr>
+	<div class="container col-md-6" role="main">
+	<div class="card">
+	<div class="card-header">유저 수정</div>
+	<div class="card-body">
+	<form action="modify_user_content" method="post">	
+		<input type="hidden" name="enr_user_no" value="<%=enr_user_no%>">
+		<div class="form-group row">
+			<label for="enr_user_position" class="col-md-3 col-form-label text-md-right">직책</label>
+			<div class="col-md-5">
+				<input type="text" name="enr_user_position" id="enr_user_position" class="form-control" placeholder="직책" />
+			</div>
+		</div>		
+		<div class="form-group row">
+			<label for="enr_user_group" class="col-md-3 col-form-label text-md-right">조직</label>
+			<div class="col-md-5">
+				<input type="text" name="enr_user_group" id="enr_user_group" class="form-control" placeholder="조직" />
+			</div>
+		</div>
+		<div class="form-group row">
+			<label for="create_grant" class="col-md-3 col-form-label text-md-right">생성권한</label>
+			<div class="col-md-5">
+				<input type="text" name="create_grant" id="create_grant" class="form-control" placeholder="생성권한" />
+			</div>
+		</div>
+		<div class="form-group row">
+			<label for="update_grant" class="col-md-3 col-form-label text-md-right">수정권한</label>
+			<div class="col-md-5">
+				<input type="text" name="update_grant" id="update_grant" class="form-control" placeholder="수정권한" />
+			</div>
+		</div>
+		<div class="form-group row">
+			<label for="delete_grant" class="col-md-3 col-form-label text-md-right">삭제권한</label>
+			<div class="col-md-5">
+				<input type="text" name="delete_grant" id="delete_grant" class="form-control" placeholder="삭제권한" />
+			</div>
+		</div>		
+		<input type="submit" class="btn btn-dark float-right" value="수정"> 
 		</form>
-		</table>
 		</div>
 		</div>
 	</article>
